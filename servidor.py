@@ -1,5 +1,6 @@
 """
 servidor.py — CommSim v3
+Motor de comunicaciones digitales mejorado con estadísticas detalladas.
 """
 from __future__ import annotations
 import base64, io, os, queue, struct, sys, time
@@ -20,9 +21,25 @@ NODOS = ["A", "B"]; PAR = {"A":"B","B":"A"}
 motores = {n: Motor() for n in NODOS}
 buzon   = {n: queue.Queue(maxsize=30) for n in NODOS}
 ultimo  = {n: None for n in NODOS}
-stats   = {n: {"enviados":0,"recibidos":0,"bytes_tx":0,"errores":0} for n in NODOS}
+
+# Estadísticas detalladas por nodo
+stats = {n: {
+    "enviados": 0,
+    "recibidos": 0,
+    "bytes_tx": 0,
+    "bytes_rx": 0,
+    "errores": 0,
+    "ber_valores": [],      # Historial de BER
+    "snr_valores": [],      # Historial de SNR
+    "exito_valores": [],    # Historial de éxito %
+    "integridad": 0,        # Checksum OK
+    "integridad_total": 0,  # Total OK
+    "tx_historico": [],     # Datos de cada transmisión (últimas 100)
+    "rx_historico": [],     # Datos de cada recepción (últimas 100)
+} for n in NODOS}
 
 def r2d(r: Resultado) -> dict:
+    """Convierte Resultado a diccionario JSON con métricas completas."""
     return {
         "ber":       round(r.ber, 6),
         "snr":       round(r.snr, 2),
@@ -36,11 +53,13 @@ def r2d(r: Resultado) -> dict:
         "v_rx":      r.v_rx,
         "freqs":     r.freqs,
         "potencia":  r.potencia,
-        "ctx":       r.ctx,
-        "crx":       r.crx,
-        "ojo":       r.ojo,
-        "b_orig":    r.b_orig,
-        "b_rx":      r.b_rx,
+        "ctx":       r.ctx,      # Constelación TX
+        "crx":       r.crx,      # Constelación RX
+        "ojo":       r.ojo,      # Eye diagram
+        "b_orig":    r.b_orig,   # Bits originales
+        "b_rx":      r.b_rx,     # Bits recibidos
+        "amplitud_tx": [float(np.abs(x)) for x in r.v_tx[:50]],  # Envolvente TX
+        "amplitud_rx": [float(np.abs(x)) for x in r.v_rx[:50]],  # Envolvente RX
     }
 
 def wav_tono(f=440., dur=1., fs=8000) -> bytes:
@@ -103,6 +122,7 @@ def vivo(n):
 
 @app.route("/api/<n>/tx", methods=["POST"])
 def tx(n):
+    """Transmite datos y registra métricas detalladas."""
     e = vn(n)
     if e: return e
     d = request.get_json(force=True) or {}
@@ -133,7 +153,32 @@ def tx(n):
         prueba = raw[:min(len(raw),128)]
         r = motores[n].transmitir(prueba)
         dr = r2d(r); ultimo[n] = dr
-        stats[n]["enviados"] += 1; stats[n]["bytes_tx"] += len(raw)
+        
+        # Actualizar estadísticas globales
+        stats[n]["enviados"] += 1
+        stats[n]["bytes_tx"] += len(raw)
+        stats[n]["ber_valores"].append(r.ber)
+        stats[n]["snr_valores"].append(r.snr)
+        stats[n]["exito_valores"].append(r.exito)
+        if r.ck_ok:
+            stats[n]["integridad"] += 1
+            stats[n]["integridad_total"] += 1
+        
+        # Mantener histórico de últimas 100 transmisiones
+        tx_entry = {
+            "ts": time.time(),
+            "tipo": tipo,
+            "tam": len(raw),
+            "nom": nom,
+            "ber": round(r.ber, 6),
+            "snr": round(r.snr, 2),
+            "exito": r.exito,
+            "ck_ok": r.ck_ok,
+            "mod": r.mod
+        }
+        stats[n]["tx_historico"].append(tx_entry)
+        if len(stats[n]["tx_historico"]) > 100:
+            stats[n]["tx_historico"].pop(0)
 
         item = {"tipo":tipo,"b64":base64.b64encode(raw).decode(),"emisor":n,
                 "ts":time.time(),"ber":round(r.ber,6),"ck_ok":r.ck_ok,
@@ -143,6 +188,22 @@ def tx(n):
             except: pass
         buzon[par].put_nowait(item)
         stats[par]["recibidos"] += 1
+        stats[par]["bytes_rx"] += len(raw)
+        
+        # Registrar en histórico de recepción del nodo par
+        rx_entry = {
+            "ts": time.time(),
+            "tipo": tipo,
+            "tam": len(raw),
+            "nom": nom,
+            "emisor": n,
+            "ber": round(r.ber, 6),
+            "ck_ok": r.ck_ok
+        }
+        stats[par]["rx_historico"].append(rx_entry)
+        if len(stats[par]["rx_historico"]) > 100:
+            stats[par]["rx_historico"].pop(0)
+        
         return jsonify({"ok":True,"resultado":dr})
     except Exception as ex:
         stats[n]["errores"] += 1
@@ -160,9 +221,79 @@ def leer_buzon(n):
 
 @app.route("/api/<n>/stats")
 def get_stats(n):
+    """Obtiene estadísticas actuales del nodo."""
     e = vn(n)
     if e: return e
-    return jsonify(stats[n])
+    s = stats[n]
+    # Calcular promedios
+    ber_prom = round(np.mean(s["ber_valores"]), 6) if s["ber_valores"] else 0.0
+    snr_prom = round(np.mean(s["snr_valores"]), 2) if s["snr_valores"] else 0.0
+    exito_prom = round(np.mean(s["exito_valores"]), 2) if s["exito_valores"] else 0.0
+    tasa_integridad = round((s["integridad_total"] / max(s["enviados"], 1)) * 100, 2)
+    
+    return jsonify({
+        "enviados": s["enviados"],
+        "recibidos": s["recibidos"],
+        "bytes_tx": s["bytes_tx"],
+        "bytes_rx": s["bytes_rx"],
+        "errores": s["errores"],
+        "ber_prom": ber_prom,
+        "snr_prom": snr_prom,
+        "exito_prom": exito_prom,
+        "integridad_prom": tasa_integridad,
+        "ber_valores": s["ber_valores"][-50:],  # Últimos 50 valores
+        "snr_valores": s["snr_valores"][-50:],
+        "exito_valores": s["exito_valores"][-50:],
+    })
+
+@app.route("/api/<n>/stats_historico")
+def stats_historico(n):
+    """Obtiene el histórico completo de transmisiones y recepciones."""
+    e = vn(n)
+    if e: return e
+    s = stats[n]
+    return jsonify({
+        "tx_historico": s["tx_historico"],
+        "rx_historico": s["rx_historico"]
+    })
+
+@app.route("/api/<n>/histograma")
+def histograma(n):
+    """Calcula histograma de amplitudes de la última transmisión."""
+    e = vn(n)
+    if e: return e
+    if ultimo[n] is None:
+        return jsonify({"bins": [], "valores": []})
+    
+    # Usar amplitudes de TX
+    amps = np.array(ultimo[n].get("amplitud_tx", []))
+    if len(amps) == 0:
+        return jsonify({"bins": [], "valores": []})
+    
+    bins, counts = np.histogram(amps, bins=16, range=(0, np.max(amps) + 0.1))
+    return jsonify({
+        "bins": [float(b) for b in bins],
+        "valores": [int(c) for c in counts]
+    })
+
+@app.route("/api/<n>/espectrograma")
+def espectrograma(n):
+    """Calcula espectrograma simple 2D."""
+    e = vn(n)
+    if e: return e
+    if ultimo[n] is None:
+        return jsonify({"data": []})
+    
+    freqs = np.array(ultimo[n].get("freqs", []))
+    potencia = np.array(ultimo[n].get("potencia", []))
+    
+    if len(freqs) == 0 or len(potencia) == 0:
+        return jsonify({"freqs": [], "potencia": []})
+    
+    return jsonify({
+        "freqs": [float(f) for f in freqs],
+        "potencia": [float(p) for p in potencia]
+    })
 
 @app.route("/api/<n>/ber_curva")
 def ber_curva(n):
