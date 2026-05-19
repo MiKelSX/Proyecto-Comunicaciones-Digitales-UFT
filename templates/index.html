@@ -23,8 +23,8 @@ body.bn{
   --bg:#F5F3EF; --bg1:#EDEDEA; --bg2:#E4E2DE; --bg3:#D8D5D0;
   --wh:#FFFFFF; --ink:#0C0C0C; --ink2:#3A3A3A; --ink3:#7A7A7A; --ink4:#BCBCBC;
   --bdr:#D0CCC6; --bdr2:#0C0C0C;
-  --c1:#0C0C0C; --c2:#3A3A3A; --c3:#7A7A7A; --c4:#0C0C0C;
-  --c5:#3A3A3A; --c6:#0C0C0C; --c7:#5A5A5A; --c8:#3A3A3A;
+  --c1:#0066CC; --c2:#7A3A8D; --c3:#CC8800; --c4:#009933;
+  --c5:#CC3333; --c6:#0066CC; --c7:#CC3388; --c8:#6633CC;
   --sh:0 2px 10px rgba(0,0,0,.08); --sh2:0 6px 24px rgba(0,0,0,.12);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -314,6 +314,49 @@ body.bn .toast{background:var(--ink);color:var(--wh)}
   animation:spin .6s linear infinite;display:none}
 .bspn.on{display:inline-block}
 body.bn .bspn{border-top-color:var(--ink)}
+
+/* ── SEMÁFOROS Y QUALITY INDICATORS ─────────────────── */
+.traffic{display:inline-flex;align-items:center;gap:4px;font-size:.55rem;font-weight:700}
+.light{width:8px;height:8px;border-radius:50%;transition:all .25s}
+.light.green{background:#10B981;box-shadow:0 0 6px rgba(16,185,129,.6)}
+.light.yellow{background:#F59E0B;box-shadow:0 0 6px rgba(245,158,11,.6)}
+.light.red{background:#EF4444;box-shadow:0 0 6px rgba(239,68,68,.6)}
+body.bn .light.green{background:#009933}
+body.bn .light.yellow{background:#CC8800}
+body.bn .light.red{background:#CC3333}
+
+/* ── TOOLTIPS ───────────────────────────────────────── */
+.tooltip{position:relative;cursor:help;border-bottom:1px dotted var(--ink3)}
+.tooltip::after{content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);
+  background:var(--bg1);color:var(--ink);padding:6px 10px;border-radius:var(--r);
+  font-size:.58rem;white-space:nowrap;opacity:0;pointer-events:none;
+  transition:opacity .2s;margin-bottom:4px;border:1px solid var(--bdr)}
+.tooltip:hover::after{opacity:1;pointer-events:all}
+body.bn .tooltip::after{background:var(--bg1);border-color:var(--bdr)}
+
+/* ── EXPLICACIONES INLINE ───────────────────────────── */
+.explain{font-family:var(--mono);font-size:.54rem;color:var(--ink3);
+  margin-top:4px;padding:4px 8px;background:var(--bg2);border-left:2px solid var(--c1);
+  border-radius:2px;display:none}
+.explain.show{display:block}
+body.bn .explain{border-color:var(--ink);background:var(--bg2)}
+
+/* ── PROGRESS BAR ───────────────────────────────────── */
+.progress{width:100%;height:3px;background:var(--bg3);border-radius:2px;
+  overflow:hidden;margin:8px 0}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--c4),var(--c1));
+  animation:progress 2s ease-in-out infinite}
+@keyframes progress{0%,100%{width:0%}50%{width:100%}}
+
+/* ── NUEVA SECCIÓN DE COMPARACIÓN ───────────────────── */
+.comp-panel{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:600px){.comp-panel{grid-template-columns:1fr}}
+
+/* ── MODO EXPLICATIVO ───────────────────────────────── */
+.explain-simple{font-family:var(--mono);font-size:.62rem;color:var(--ink2);
+  background:var(--bg2);padding:10px;border-radius:var(--r);margin-bottom:8px;
+  line-height:1.5}
+body.bn .explain-simple{background:var(--bg3)}
 </style>
 </head>
 <body>
@@ -336,7 +379,7 @@ body.bn .bspn{border-top-color:var(--ink)}
       <div class="ldg"><div class="ld lrx" id="lRX"></div><span class="ll">RX</span></div>
     </div>
     <div class="sep"></div>
-    <button class="tbtn" id="btnTema">🎨 Modo B&amp;N</button>
+    <button class="tbtn" id="btnTema" title="Cambiar tema: claro (Light) / oscuro (Dark)">🌞 Tema</button>
     <div class="sep"></div>
     <select class="ns" id="selNodo">
       <option value="A">Nodo A — Emisor</option>
@@ -363,14 +406,14 @@ body.bn .bspn{border-top-color:var(--ink)}
     <div class="ch"><div class="cp"></div><span class="ct">Parámetros del Canal</span></div>
     <div class="g2">
       <div>
-        <div class="ctrl"><span class="cl">SNR (dB)</span><input type="range" id="rSNR" min="0" max="40" step="1" value="20"><span class="cv2" id="vSNR">20</span></div>
-        <div class="ctrl"><span class="cl">Portadora Hz</span><input type="range" id="rFC" min="100" max="2000" step="50" value="400"><span class="cv2" id="vFC">400</span></div>
-        <div class="ctrl"><span class="cl">Tasa símbolo</span><input type="range" id="rSR" min="10" max="200" step="10" value="40"><span class="cv2" id="vSR">40</span></div>
+        <div class="ctrl"><span class="cl" title="Signal-to-Noise Ratio: Mayor valor = menos ruido. Rango ideal 15-40 dB">SNR (dB)</span><input type="range" id="rSNR" min="0" max="40" step="1" value="20"><span class="cv2" id="vSNR">20</span></div>
+        <div class="ctrl"><span class="cl" title="Frecuencia de la portadora en Hz. Define el rango del espectro">Portadora Hz</span><input type="range" id="rFC" min="100" max="2000" step="50" value="400"><span class="cv2" id="vFC">400</span></div>
+        <div class="ctrl"><span class="cl" title="Velocidad de transmisión de símbolos. Mayor valor = más rápido pero más sensible al ruido">Tasa símbolo</span><input type="range" id="rSR" min="10" max="200" step="10" value="40"><span class="cv2" id="vSR">40</span></div>
       </div>
       <div>
-        <div class="ctrl"><span class="cl">Modulación</span><select id="selMod"></select></div>
-        <div class="ctrl"><span class="cl">Codificación</span><select id="selCod"></select></div>
-        <div class="ctrl"><span class="cl">Bits/símbolo</span><input type="range" id="rBPS" min="1" max="4" step="1" value="2"><span class="cv2" id="vBPS">2</span></div>
+        <div class="ctrl"><span class="cl" title="Tipo de modulación (ASK, BPSK, QAM, OFDM)">Modulación</span><select id="selMod"></select></div>
+        <div class="ctrl"><span class="cl" title="Código corrector de errores (Ninguna, Hamming, Repetición)">Codificación</span><select id="selCod"></select></div>
+        <div class="ctrl"><span class="cl" title="Bits de información por símbolo transmitido">Bits/símbolo</span><input type="range" id="rBPS" min="1" max="4" step="1" value="2"><span class="cv2" id="vBPS">2</span></div>
       </div>
     </div>
   </div>
@@ -378,34 +421,49 @@ body.bn .bspn{border-top-color:var(--ink)}
   <div class="g2">
     <div class="card">
       <div class="ch"><div class="cp"></div><span class="ct">Señales en el Tiempo</span></div>
+      <div class="explain-simple" style="display:block">
+        ℹ️ Visualización de la portadora original (azul), señal modulada (morado) y señal ruidosa recibida (naranja).
+      </div>
       <div class="cvw"><canvas id="cvT" height="130"></canvas><span class="cvl">Amplitud / Tiempo (s)</span></div>
       <div class="leg">
-        <span><span class="ld2" style="background:var(--c1)"></span>Portadora</span>
-        <span><span class="ld2" style="background:var(--c2)"></span>Modulada</span>
-        <span><span class="ld2" style="background:var(--c3);opacity:.8"></span>Ruidosa</span>
+        <span><span class="ld2" style="background:var(--c1)"></span>Portadora (referencia)</span>
+        <span><span class="ld2" style="background:var(--c2)"></span>Modulada (información)</span>
+        <span><span class="ld2" style="background:var(--c3);opacity:.8"></span>Ruidosa (recibida)</span>
       </div>
     </div>
     <div class="card">
       <div class="ch"><div class="cp"></div><span class="ct">Espectro de Potencia (PSD)</span></div>
-      <div class="cvw"><canvas id="cvS" height="130"></canvas><span class="cvl">Hz / dB</span></div>
+      <div class="explain-simple" style="display:block">
+        ℹ️ Distribución de energía en el dominio de frecuencias. Muestra dónde se concentra la potencia de la señal.
+      </div>
+      <div class="cvw"><canvas id="cvS" height="130"></canvas><span class="cvl">Frecuencia (Hz) / Potencia (dB)</span></div>
     </div>
   </div>
 
   <div class="g3">
     <div class="card">
       <div class="ch"><div class="cp"></div><span class="ct">Constelación IQ</span></div>
+      <div class="explain-simple" style="display:block">
+        ℹ️ Plano complejo I/Q. Triángulos = puntos ideales TX. Círculos = puntos recibidos. Separación = ruido.
+      </div>
       <canvas id="cvC" height="170"></canvas>
       <div class="leg" style="margin-top:5px">
-        <span><span class="ld2" style="background:var(--c4)"></span>TX ideal</span>
-        <span><span class="ld2" style="background:var(--c7)"></span>RX recibido</span>
+        <span><span class="ld2" style="background:var(--c4)"></span>TX ideal (teórico)</span>
+        <span><span class="ld2" style="background:var(--c7)"></span>RX recibido (con ruido)</span>
       </div>
     </div>
     <div class="card">
       <div class="ch"><div class="cp"></div><span class="ct">Eye Diagram</span></div>
+      <div class="explain-simple" style="display:block">
+        ℹ️ Apertura del ojo = calidad. Ojo abierto = buena sincronización. Ojo cerrado = interferencia.
+      </div>
       <canvas id="cvE" height="170"></canvas>
     </div>
     <div class="card">
       <div class="ch"><div class="cp"></div><span class="ct">Stream de Bits NRZ</span></div>
+      <div class="explain-simple" style="display:block">
+        ℹ️ Representación del flujo binario en código NRZ (Non-Return-to-Zero). 1=alto, 0=bajo.
+      </div>
       <canvas id="cvN" height="72"></canvas>
       <div style="height:6px"></div>
       <div class="bits" id="bLive">Iniciando...</div>
@@ -414,6 +472,9 @@ body.bn .bspn{border-top-color:var(--ink)}
 
   <div class="card">
     <div class="ch"><div class="cp"></div><span class="ct">Espectro Electromagnético — Posición de la señal</span></div>
+    <div class="explain-simple" style="display:block">
+      ℹ️ Localización automática de la portadora en el espectro EM. Desde ondas de radio hasta rayos gamma.
+    </div>
     <div class="cvw"><canvas id="cvEM" height="62"></canvas></div>
     <div class="emlbl">
       <span>Radio</span><span>Microondas</span><span>Infrarrojo</span>
@@ -483,24 +544,45 @@ body.bn .bspn{border-top-color:var(--ink)}
     <div>
       <div class="card">
         <div class="ch"><div class="cp"></div><span class="ct">Resultado de Transmisión</span></div>
+        <div style="margin-bottom:10px">
+          <div class="explain-simple" id="txExplain" style="display:none">
+            💡 <strong>Cómo interpretar:</strong> <span id="txExplainText"></span>
+          </div>
+          <div class="traffic">
+            <span class="light" id="qualityLight"></span>
+            <span id="qualityText">—</span>
+          </div>
+        </div>
         <div class="stats">
-          <div class="stat"><div class="sl">BER</div><div class="sv" id="tBER">—</div></div>
-          <div class="stat"><div class="sl">SNR</div><div class="sv" id="tSNR">—</div></div>
-          <div class="stat"><div class="sl">Éxito</div><div class="sv" id="tEx">—</div></div>
-          <div class="stat"><div class="sl">Bytes</div><div class="sv" id="tBy">—</div></div>
-          <div class="stat"><div class="sl">MD5</div><div class="sv" id="tMD">—</div></div>
-          <div class="stat"><div class="sl">Overhead</div><div class="sv" id="tOH">—</div></div>
+          <div class="stat" title="Tasa de error de bits. Idealmente &lt;1%">
+            <div class="sl">BER</div><div class="sv" id="tBER">—</div>
+          </div>
+          <div class="stat" title="Relación Señal-Ruido. Mayor es mejor. Ideal &gt;15 dB">
+            <div class="sl">SNR</div><div class="sv" id="tSNR">—</div>
+          </div>
+          <div class="stat" title="Porcentaje de bits correctos">
+            <div class="sl">Éxito</div><div class="sv" id="tEx">—</div>
+          </div>
+          <div class="stat" title="Cantidad de bytes transmitidos">
+            <div class="sl">Bytes</div><div class="sv" id="tBy">—</div>
+          </div>
+          <div class="stat" title="Verificación MD5 de integridad">
+            <div class="sl">MD5</div><div class="sv" id="tMD">—</div>
+          </div>
+          <div class="stat" title="Expansión por codificación (Hamming=1.75x, Repetición=3x)">
+            <div class="sl">Overhead</div><div class="sv" id="tOH">—</div>
+          </div>
         </div>
         <div class="g2" style="margin-bottom:8px">
-          <div class="cvw"><canvas id="cvTS" height="90"></canvas><span class="cvl">TX vs RX</span></div>
-          <div class="cvw"><canvas id="cvTP" height="90"></canvas><span class="cvl">Espectro TX</span></div>
+          <div class="cvw"><canvas id="cvTS" height="90"></canvas><span class="cvl">TX vs RX — Envío (azul) vs Recibido (naranja)</span></div>
+          <div class="cvw"><canvas id="cvTP" height="90"></canvas><span class="cvl">Espectro TX — Contenido frecuencial</span></div>
         </div>
         <div class="g2">
-          <div class="cvw"><canvas id="cvTC" height="130"></canvas><span class="cvl">Constelación RX</span></div>
+          <div class="cvw"><canvas id="cvTC" height="130"></canvas><span class="cvl">Constelación RX — Puntos ideales (triángulos) vs recibidos (círculos)</span></div>
           <div>
-            <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Bits TX</div>
+            <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Bits TX (Original)</div>
             <div class="bits" id="bTX" style="margin-bottom:7px">—</div>
-            <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Bits RX</div>
+            <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Bits RX (Recibido)</div>
             <div class="bits" id="bRX">—</div>
           </div>
         </div>
@@ -528,23 +610,29 @@ body.bn .bspn{border-top-color:var(--ink)}
     <div>
       <div class="card">
         <div class="ch"><div class="cp"></div><span class="ct">Métricas de Recepción en Vivo</span></div>
+        <div style="margin-bottom:10px">
+          <div class="traffic">
+            <span class="light" id="rxQualityLight"></span>
+            <span id="rxQualityText">—</span>
+          </div>
+        </div>
         <div class="stats">
-          <div class="stat"><div class="sl">Recibidos</div><div class="sv" id="rxT">0</div></div>
-          <div class="stat"><div class="sl">Bytes RX</div><div class="sv" id="rxB">0</div></div>
-          <div class="stat"><div class="sl">Errores</div><div class="sv" id="rxE">0</div></div>
-          <div class="stat"><div class="sl">Integridad</div><div class="sv" id="rxI">—</div></div>
-          <div class="stat"><div class="sl">BER prom</div><div class="sv" id="rxBER">—</div></div>
-          <div class="stat"><div class="sl">SNR prom</div><div class="sv" id="rxSNR">—</div></div>
+          <div class="stat" title="Total de mensajes recibidos desde el nodo peer"><div class="sl">Recibidos</div><div class="sv" id="rxT">0</div></div>
+          <div class="stat" title="Volumen total de datos recibidos"><div class="sl">Bytes RX</div><div class="sv" id="rxB">0</div></div>
+          <div class="stat" title="Mensajes que llegaron con errores detectados"><div class="sl">Errores</div><div class="sv" id="rxE">0</div></div>
+          <div class="stat" title="Porcentaje de checksums MD5 correctos"><div class="sl">Integridad</div><div class="sv" id="rxI">—</div></div>
+          <div class="stat" title="BER promedio de todas las recepciones"><div class="sl">BER prom</div><div class="sv" id="rxBER">—</div></div>
+          <div class="stat" title="SNR promedio de todas las recepciones"><div class="sl">SNR prom</div><div class="sv" id="rxSNR">—</div></div>
         </div>
         <div class="g2" style="margin-bottom:8px">
-          <div class="cvw"><canvas id="cvRE" height="120"></canvas><span class="cvl">Eye Diagram RX</span></div>
-          <div class="cvw"><canvas id="cvRC" height="120"></canvas><span class="cvl">Constelación RX</span></div>
+          <div class="cvw"><canvas id="cvRE" height="120"></canvas><span class="cvl">Eye Diagram RX — Apertura del ojo recibida</span></div>
+          <div class="cvw"><canvas id="cvRC" height="120"></canvas><span class="cvl">Constelación RX — Puntos recibidos en plano I/Q</span></div>
         </div>
         <div class="cvw" style="margin-bottom:8px">
-          <canvas id="cvRS" height="80"></canvas><span class="cvl">Espectro señal recibida</span>
+          <canvas id="cvRS" height="80"></canvas><span class="cvl">Espectro señal recibida — Contenido frecuencial del RX</span>
         </div>
         <div class="cvw">
-          <canvas id="cvRN" height="60"></canvas><span class="cvl">Bits RX (NRZ)</span>
+          <canvas id="cvRN" height="60"></canvas><span class="cvl">Bits RX (NRZ) — Flujo binario recibido</span>
         </div>
       </div>
       <div class="card">
@@ -980,6 +1068,43 @@ function renderR(r){
   A.lastR=r;
   const c=C();
   const ber=(r.ber*100).toFixed(3);
+  
+  // ══════════════════════════════════════════════════════
+  // CALIDAD GENERAL — SEMÁFORO
+  // ══════════════════════════════════════════════════════
+  let quality=''; let qualityLight=''; let qualityExplain='';
+  if(r.ber<0.01 && r.snr>=15 && r.exito>=99){
+    quality='🟢 EXCELENTE'; qualityLight='green';
+    qualityExplain='✓ Transmisión perfecta. BER casi nulo, SNR muy alto, integridad total.';
+  }else if(r.ber<0.05 && r.snr>=12 && r.exito>=95){
+    quality='🟢 BUENO'; qualityLight='green';
+    qualityExplain='✓ Muy pocos errores. Condiciones favorables para comunicación confiable.';
+  }else if(r.ber<0.1 && r.snr>=8 && r.exito>=85){
+    quality='🟡 ACEPTABLE'; qualityLight='yellow';
+    qualityExplain='⚠ Calidad moderada. Algunos errores correctos o detectables con codificación.';
+  }else if(r.ber<0.2 && r.snr>=5){
+    quality='🟡 DÉBIL'; qualityLight='yellow';
+    qualityExplain='⚠ Muchos errores. Considere aumentar SNR o usar codificación de errores.';
+  }else{
+    quality='🔴 DEFICIENTE'; qualityLight='red';
+    qualityExplain='✗ Comunicación muy ruidosa. Aumenta SNR significativamente o cambia parámetros.';
+  }
+  
+  const qualEl=$('qualityLight');
+  const qualTxtEl=$('qualityText');
+  if(qualEl){
+    qualEl.className='light '+qualityLight;
+    qualTxtEl.textContent=quality;
+  }
+  
+  // Mostrar explicación
+  const explEl=$('txExplain');
+  const explTxtEl=$('txExplainText');
+  if(explEl && explTxtEl){
+    explTxtEl.textContent=qualityExplain;
+    explEl.style.display='block';
+  }
+  
   // Stats tx
   $('tBER').textContent=ber+'%';
   $('tBER').className='sv '+(r.ber<.01?'ok':(r.ber<.1?'mid':'err'));
@@ -1183,6 +1308,36 @@ async function sondear(){
   $('rxBER').textContent=A.rxN>0?(_berAcc/A.rxN*100).toFixed(2)+'%':'—';
   $('rxSNR').textContent=A.rxN>0?(_snrAcc/A.rxN).toFixed(1)+'dB':'—';
   $('sRX').textContent=A.rxN;
+  
+  // ══════════════════════════════════════════════════════
+  // CALIDAD RX — SEMÁFORO
+  // ══════════════════════════════════════════════════════
+  if(A.rxN>0){
+    const avgBER=_berAcc/A.rxN;
+    const avgSNR=_snrAcc/A.rxN;
+    const integrity=Math.round((1-_rxE/A.rxN)*100);
+    
+    let rxQuality=''; let rxLight='';
+    if(avgBER<0.01 && avgSNR>=15 && integrity>=99){
+      rxQuality='🟢 Recepción Excelente'; rxLight='green';
+    }else if(avgBER<0.05 && avgSNR>=12 && integrity>=95){
+      rxQuality='🟢 Recepción Buena'; rxLight='green';
+    }else if(avgBER<0.1 && avgSNR>=8 && integrity>=85){
+      rxQuality='🟡 Recepción Aceptable'; rxLight='yellow';
+    }else if(avgBER<0.2 && avgSNR>=5){
+      rxQuality='🟡 Recepción Débil'; rxLight='yellow';
+    }else{
+      rxQuality='🔴 Recepción Deficiente'; rxLight='red';
+    }
+    
+    const rxQualEl=$('rxQualityLight');
+    const rxQualTxtEl=$('rxQualityText');
+    if(rxQualEl && rxQualTxtEl){
+      rxQualEl.className='light '+rxLight;
+      rxQualTxtEl.textContent=rxQuality;
+    }
+  }
+  
   setTimeout(()=>$('lRX').classList.remove('on'),1400);
 }
 
@@ -1293,12 +1448,30 @@ function animBars(){
 ═══════════════════════════════════════════════════════ */
 function setupDZ(dzId,inpId,cb){
   const dz=$(dzId);
-  dz.addEventListener('click',()=>$(inpId).click());
-  ['dragover','dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{
-    e.preventDefault();dz.classList.toggle('ov',ev==='dragover');
-    if(ev==='drop'&&e.dataTransfer.files[0])cb(e.dataTransfer.files[0]);
-  }));
-  $(inpId).addEventListener('change',e=>{if(e.target.files[0])cb(e.target.files[0]);e.target.value='';});
+  const inp=$(inpId);
+  
+  // Prevenir listeners duplicados
+  if(dz._setup)return;
+  dz._setup=true;
+  
+  // Click en drop zone
+  dz.addEventListener('click',()=>inp.click());
+  
+  // Drag and drop
+  ['dragover','dragleave','drop'].forEach(ev=>{
+    dz.addEventListener(ev,e=>{
+      e.preventDefault();
+      e.stopPropagation();
+      dz.classList.toggle('ov',ev==='dragover');
+      if(ev==='drop'&&e.dataTransfer.files[0])cb(e.dataTransfer.files[0]);
+    });
+  });
+  
+  // File input change
+  inp.addEventListener('change',e=>{
+    if(e.target.files[0])cb(e.target.files[0]);
+    e.target.value='';
+  });
 }
 function leerImg(f){
   if(f.size>10*1024*1024){toast('Imagen >10MB');return;}
@@ -1374,7 +1547,9 @@ function conectar(){
   $('btnTema').addEventListener('click',()=>{
     A.bn=!A.bn;
     document.body.classList.toggle('bn',A.bn);
-    $('btnTema').textContent=A.bn?'🎨 Modo Color':'⬛ Modo B&N';
+    localStorage.setItem('commsim-theme',A.bn?'light':'dark');
+    $('btnTema').textContent=A.bn?'🌙 Tema':'🌞 Tema';
+    $('btnTema').title=A.bn?'Tema claro (Light Mode)':'Tema oscuro (Dark Mode)';
     if(A.lastR)setTimeout(()=>renderR(A.lastR),50);
   });
   $('btnGrb').addEventListener('click',iniciarGrab);
@@ -1398,6 +1573,22 @@ function conectar(){
 ═══════════════════════════════════════════════════════ */
 async function init(){
   try{
+    // ═══════════════════════════════════════════════════════
+    // CARGAR TEMA GUARDADO
+    // ═══════════════════════════════════════════════════════
+    const savedTheme=localStorage.getItem('commsim-theme');
+    if(savedTheme==='light'){
+      A.bn=true;
+      document.body.classList.add('bn');
+      $('btnTema').textContent='🌙 Tema';
+      $('btnTema').title='Tema claro (Light Mode)';
+    }else{
+      A.bn=false;
+      document.body.classList.remove('bn');
+      $('btnTema').textContent='🌞 Tema';
+      $('btnTema').title='Tema oscuro (Dark Mode)';
+    }
+    
     // Nodo desde URL
     const n=new URL(location.href).searchParams.get('nodo');
     if(n==='A'||n==='B'){
