@@ -9,11 +9,26 @@ export const A = {
   tipo: 'texto',
   bn: false, // dark/light mode
 
-  // Statistics
+  // Envío control
+  enviando: false, // Flag para evitar envíos duplicados
+
+  // Statistics TX
   txN: 0,
+  txBytesTot: 0,
+  txBERSum: 0,
+  txSNRSum: 0,
+  txExSum: 0,
+  txIntegrOK: 0,
+  lastTx: null, // Última transmisión
+
+  // Statistics RX
   rxN: 0,
-  rxBytes: 0,
+  rxBytesTot: 0,
   rxErr: 0,
+  rxBERSum: 0,
+  rxSNRSum: 0,
+  rxIntegrOK: 0,
+  lastRx: null, // Última recepción
   berAcc: 0,
   snrAcc: 0,
 

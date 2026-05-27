@@ -599,7 +599,7 @@ body.bn .graph-info-value{color:var(--ink)}
     </div>
     <div>
       <div class="card">
-        <div class="ch"><div class="cp"></div><span class="ct">Resultado de Transmisión</span></div>
+        <div class="ch"><div class="cp"></div><span class="ct">Resultado de Transmisión (Última Enviada)</span></div>
         <div style="margin-bottom:10px">
           <div class="explain-simple" id="txExplain" style="display:none">
             💡 <strong>Cómo interpretar:</strong> <span id="txExplainText"></span>
@@ -627,6 +627,29 @@ body.bn .graph-info-value{color:var(--ink)}
           </div>
           <div class="stat" title="Expansión por codificación (Hamming=1.75x, Repetición=3x)">
             <div class="sl">Overhead</div><div class="sv" id="tOH">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="cp"></div><span class="ct">Resultados Totales de Transmisión</span></div>
+        <div class="stats">
+          <div class="stat" title="Total de mensajes enviados">
+            <div class="sl">Enviados</div><div class="sv" id="txTotales">0</div>
+          </div>
+          <div class="stat" title="Volumen total de datos transmitidos">
+            <div class="sl">Bytes Totales</div><div class="sv" id="txBytesTot">0</div>
+          </div>
+          <div class="stat" title="BER promedio de todas las transmisiones">
+            <div class="sl">BER Promedio</div><div class="sv" id="txBERProm">—</div>
+          </div>
+          <div class="stat" title="SNR promedio de todas las transmisiones">
+            <div class="sl">SNR Promedio</div><div class="sv" id="txSNRProm">—</div>
+          </div>
+          <div class="stat" title="Porcentaje de éxito promedio">
+            <div class="sl">Éxito Promedio</div><div class="sv" id="txExProm">—</div>
+          </div>
+          <div class="stat" title="Integridad de datos (checksums correctos)">
+            <div class="sl">Integridad</div><div class="sv" id="txIntegr">—</div>
           </div>
         </div>
         <div class="g2" style="margin-bottom:8px">
@@ -665,7 +688,7 @@ body.bn .graph-info-value{color:var(--ink)}
     </div>
     <div>
       <div class="card">
-        <div class="ch"><div class="cp"></div><span class="ct">Métricas de Recepción en Vivo</span></div>
+        <div class="ch"><div class="cp"></div><span class="ct">Resultado de Transmisión (Última Recibida)</span></div>
         <div style="margin-bottom:10px">
           <div class="traffic">
             <span class="light" id="rxQualityLight"></span>
@@ -673,12 +696,23 @@ body.bn .graph-info-value{color:var(--ink)}
           </div>
         </div>
         <div class="stats">
+          <div class="stat" title="BER de la última transmisión recibida"><div class="sl">BER Última</div><div class="sv" id="rxBERUlt">—</div></div>
+          <div class="stat" title="SNR de la última transmisión recibida"><div class="sl">SNR Última</div><div class="sv" id="rxSNRUlt">—</div></div>
+          <div class="stat" title="Bytes de la última transmisión"><div class="sl">Bytes Última</div><div class="sv" id="rxBytesUlt">—</div></div>
+          <div class="stat" title="Tipo de la última transmisión"><div class="sl">Tipo Última</div><div class="sv" id="rxTipoUlt">—</div></div>
+          <div class="stat" title="MD5 de la última transmisión"><div class="sl">MD5 Última</div><div class="sv" id="rxMDUlt">—</div></div>
+          <div class="stat" title="Overhead de la última transmisión"><div class="sl">Overhead Última</div><div class="sv" id="rxOHUlt">—</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="cp"></div><span class="ct">Resultados Totales de Métricas de Recepción</span></div>
+        <div class="stats">
           <div class="stat" title="Total de mensajes recibidos desde el nodo peer"><div class="sl">Recibidos</div><div class="sv" id="rxT">0</div></div>
-          <div class="stat" title="Volumen total de datos recibidos"><div class="sl">Bytes RX</div><div class="sv" id="rxB">0</div></div>
+          <div class="stat" title="Volumen total de datos recibidos"><div class="sl">Bytes Totales</div><div class="sv" id="rxB">0</div></div>
           <div class="stat" title="Mensajes que llegaron con errores detectados"><div class="sl">Errores</div><div class="sv" id="rxE">0</div></div>
           <div class="stat" title="Porcentaje de checksums MD5 correctos"><div class="sl">Integridad</div><div class="sv" id="rxI">—</div></div>
-          <div class="stat" title="BER promedio de todas las recepciones"><div class="sl">BER prom</div><div class="sv" id="rxBER">—</div></div>
-          <div class="stat" title="SNR promedio de todas las recepciones"><div class="sl">SNR prom</div><div class="sv" id="rxSNR">—</div></div>
+          <div class="stat" title="BER promedio de todas las recepciones"><div class="sl">BER Promedio</div><div class="sv" id="rxBER">—</div></div>
+          <div class="stat" title="SNR promedio de todas las recepciones"><div class="sl">SNR Promedio</div><div class="sv" id="rxSNR">—</div></div>
         </div>
         <div class="g2" style="margin-bottom:8px">
           <div class="cvw"><canvas id="cvRE" height="120"></canvas><span class="cvl">Eye Diagram RX — Apertura del ojo recibida</span></div>

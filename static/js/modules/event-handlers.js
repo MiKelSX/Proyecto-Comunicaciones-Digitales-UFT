@@ -18,6 +18,13 @@ import { setupDZ, leerImg, leerArch } from './file-handlers.js';
 
 // Transmit message
 export async function transmitir() {
+  // Evitar envíos duplicados
+  if (A.enviando) {
+    toast('Espera a que termine la transmisión anterior');
+    return;
+  }
+
+  A.enviando = true;
   const sp = $('spnE');
   sp.classList.add('on');
   $('btnEnv').disabled = true;
@@ -45,6 +52,7 @@ export async function transmitir() {
       sp.classList.remove('on');
       $('btnEnv').disabled = false;
       $('lTX').classList.remove('on');
+      A.enviando = false;
       return;
     }
     cuerpo.b64 = A.fileB64;
@@ -60,8 +68,70 @@ export async function transmitir() {
 
     if (d && d.ok) {
       renderR(d.resultado);
+
+      // ═════════════════════════════════════════════════
+      // Actualizar estadísticas de TX
+      // ═════════════════════════════════════════════════
       A.txN++;
+      A.lastTx = d.resultado;
+      A.txBytesTot += d.resultado.bytes_tx || 0;
+      A.txBERSum += d.resultado.ber || 0;
+      A.txSNRSum += d.resultado.snr || 0;
+      A.txExSum += (1 - d.resultado.ber) * 100 || 0;
+      if (d.resultado.ck_ok) A.txIntegrOK++;
+
+      // Actualizar interfaz - Última transmisión
+      $('tBER').textContent = (d.resultado.ber * 100).toFixed(2) + '%';
+      $('tSNR').textContent = d.resultado.snr + ' dB';
+      $('tEx').textContent = ((1 - d.resultado.ber) * 100).toFixed(1) + '%';
+      $('tBy').textContent = d.resultado.bytes_tx + ' B';
+      $('tMD').textContent = d.resultado.ck_ok ? '✓' : '✗';
+      $('tOH').textContent = (d.resultado.overhead || 1).toFixed(2) + 'x';
+
+      // Actualizar interfaz - Totales
+      $('txTotales').textContent = A.txN;
+      $('txBytesTot').textContent = A.txBytesTot > 1024 ? (A.txBytesTot / 1024).toFixed(1) + ' KB' : A.txBytesTot + ' B';
+      $('txBERProm').textContent = A.txN > 0 ? ((A.txBERSum / A.txN) * 100).toFixed(2) + '%' : '—';
+      $('txSNRProm').textContent = A.txN > 0 ? (A.txSNRSum / A.txN).toFixed(1) + ' dB' : '—';
+      $('txExProm').textContent = A.txN > 0 ? (A.txExSum / A.txN).toFixed(1) + '%' : '—';
+      $('txIntegr').textContent = A.txN > 0 ? Math.round((A.txIntegrOK / A.txN) * 100) + '%' : '—';
+
+      // Actualizar tab stats
       $('sTX').textContent = A.txN;
+      $('sBER').textContent = (d.resultado.ber * 100).toFixed(2) + '%';
+      $('sSNR').textContent = d.resultado.snr + ' dB';
+      $('sEx').textContent = ((1 - d.resultado.ber) * 100).toFixed(1) + '%';
+      $('sBy').textContent = d.resultado.bytes_tx + ' B';
+      $('sOH').textContent = (d.resultado.overhead || 1).toFixed(2) + 'x';
+
+      // Quality indicator
+      const ber = d.resultado.ber;
+      const snr = d.resultado.snr;
+      let qualText = '—';
+      let qualLight = 'gray';
+
+      if (ber < 0.01 && snr >= 15) {
+        qualText = '🟢 Transmisión Excelente';
+        qualLight = 'green';
+      } else if (ber < 0.05 && snr >= 12) {
+        qualText = '🟢 Transmisión Buena';
+        qualLight = 'green';
+      } else if (ber < 0.1 && snr >= 8) {
+        qualText = '🟡 Transmisión Aceptable';
+        qualLight = 'yellow';
+      } else if (ber < 0.2 && snr >= 5) {
+        qualText = '🟡 Transmisión Débil';
+        qualLight = 'yellow';
+      } else {
+        qualText = '🔴 Transmisión Deficiente';
+        qualLight = 'red';
+      }
+
+      const ql = $('qualityLight');
+      if (ql) ql.className = 'light ' + qualLight;
+      const qt = $('qualityText');
+      if (qt) qt.textContent = qualText;
+
       addLog(
         'logTX',
         '[' +
@@ -88,6 +158,7 @@ export async function transmitir() {
 
   sp.classList.remove('on');
   $('btnEnv').disabled = false;
+  A.enviando = false;
   setTimeout(() => $('lTX').classList.remove('on'), 1600);
 }
 
@@ -106,12 +177,31 @@ export async function sondear() {
 
   items.forEach((item) => {
     A.rxN++;
+    A.rxBytesTot += item.tam || 0;
+    A.lastRx = item; // Guardar última recepción
+    
     _rxB += item.tam || 0;
-    if (!item.ck_ok) _rxE++;
+    if (!item.ck_ok) {
+      _rxE++;
+      A.rxErr++;
+    } else {
+      A.rxIntegrOK++;
+    }
+
     if (item.resultado) {
       _berAcc += item.resultado.ber || 0;
       _snrAcc += item.resultado.snr || 0;
+      A.rxBERSum += item.resultado.ber || 0;
+      A.rxSNRSum += item.resultado.snr || 0;
     }
+
+    // Actualizar interfaz - Última recepción
+    $('rxBERUlt').textContent = item.resultado ? (item.resultado.ber * 100).toFixed(2) + '%' : '—';
+    $('rxSNRUlt').textContent = item.resultado ? item.resultado.snr + ' dB' : '—';
+    $('rxBytesUlt').textContent = item.tam + ' B';
+    $('rxTipoUlt').textContent = item.tipo.toUpperCase();
+    $('rxMDUlt').textContent = item.ck_ok ? '✓' : '✗';
+    $('rxOHUlt').textContent = item.resultado ? (item.resultado.overhead || 1).toFixed(2) + 'x' : '—';
 
     addLog(
       'logRX',
@@ -150,37 +240,41 @@ export async function sondear() {
     }
   });
 
+  // Actualizar contador
   $('rxCnt').textContent = A.rxN + ' msg';
+
+  // ═════════════════════════════════════════════════════
+  // Actualizar métricas TOTALES
+  // ═════════════════════════════════════════════════════
   $('rxT').textContent = A.rxN;
-  $('rxB').textContent = _rxB > 1024 ? (_rxB / 1024).toFixed(1) + 'KB' : _rxB + 'B';
-  $('rxE').textContent = _rxE;
-  $('rxE').className = 'sv ' + (_rxE === 0 ? 'ok' : _rxE < 3 ? 'mid' : 'err');
-  $('rxI').textContent = A.rxN > 0 ? Math.round((1 - _rxE / A.rxN) * 100) + '%' : '—';
-  $('rxBER').textContent = A.rxN > 0 ? ((_berAcc / A.rxN) * 100).toFixed(2) + '%' : '—';
-  $('rxSNR').textContent = A.rxN > 0 ? (_snrAcc / A.rxN).toFixed(1) + 'dB' : '—';
+  $('rxB').textContent = A.rxBytesTot > 1024 ? (A.rxBytesTot / 1024).toFixed(1) + 'KB' : A.rxBytesTot + 'B';
+  $('rxE').textContent = A.rxErr;
+  $('rxE').className = 'sv ' + (A.rxErr === 0 ? 'ok' : A.rxErr < 3 ? 'mid' : 'err');
+  $('rxI').textContent = A.rxN > 0 ? Math.round((A.rxIntegrOK / A.rxN) * 100) + '%' : '—';
+  $('rxBER').textContent = A.rxN > 0 ? ((A.rxBERSum / A.rxN) * 100).toFixed(2) + '%' : '—';
+  $('rxSNR').textContent = A.rxN > 0 ? (A.rxSNRSum / A.rxN).toFixed(1) + ' dB' : '—';
   $('sRX').textContent = A.rxN;
 
   // ══════════════════════════════════════════════════════
-  // RX QUALITY INDICATOR
+  // RX QUALITY INDICATOR (para última recepción)
   // ══════════════════════════════════════════════════════
-  if (A.rxN > 0) {
-    const avgBER = _berAcc / A.rxN;
-    const avgSNR = _snrAcc / A.rxN;
-    const integrity = Math.round((1 - _rxE / A.rxN) * 100);
+  if (A.lastRx && A.lastRx.resultado) {
+    const ber = A.lastRx.resultado.ber || 0;
+    const snr = A.lastRx.resultado.snr || 0;
 
     let rxQuality = '';
     let rxLight = '';
 
-    if (avgBER < 0.01 && avgSNR >= 15 && integrity >= 99) {
+    if (ber < 0.01 && snr >= 15) {
       rxQuality = '🟢 Recepción Excelente';
       rxLight = 'green';
-    } else if (avgBER < 0.05 && avgSNR >= 12 && integrity >= 95) {
+    } else if (ber < 0.05 && snr >= 12) {
       rxQuality = '🟢 Recepción Buena';
       rxLight = 'green';
-    } else if (avgBER < 0.1 && avgSNR >= 8 && integrity >= 85) {
+    } else if (ber < 0.1 && snr >= 8) {
       rxQuality = '🟡 Recepción Aceptable';
       rxLight = 'yellow';
-    } else if (avgBER < 0.2 && avgSNR >= 5) {
+    } else if (ber < 0.2 && snr >= 5) {
       rxQuality = '🟡 Recepción Débil';
       rxLight = 'yellow';
     } else {
@@ -389,6 +483,11 @@ export function conectar() {
   // Buttons
   $('btnEnv').addEventListener('click', transmitir);
   $('btnDemo').addEventListener('click', () => {
+    // Evitar envíos duplicados también en Demo
+    if (A.enviando) {
+      toast('Espera a que termine la transmisión anterior');
+      return;
+    }
     $('txtMsg').value =
       'CommSim v3 — Demo Nodo ' +
       A.nodo +
