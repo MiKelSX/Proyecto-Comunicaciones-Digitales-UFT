@@ -1,0 +1,484 @@
+/* UTILIDADES — Stats, badges, logs, etc. */
+
+/* ── STATS ─────────────────────────────────────────────– */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.stat {
+  background: var(--bg2);
+  border: 1px solid var(--bdr);
+  border-radius: var(--r);
+  padding: 12px 14px;
+  text-align: center;
+  position: relative;
+  cursor: help;
+  transition: transform 0.2s var(--spg), border-color 0.2s, box-shadow 0.2s;
+}
+
+.stat:hover {
+  transform: translateY(-3px);
+  border-color: var(--c1);
+  box-shadow: 0 4px 12px rgba(0, 245, 255, 0.15);
+}
+
+body.bn .stat:hover {
+  border-color: var(--ink);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sl {
+  font-family: var(--mono);
+  font-size: 0.54rem;
+  color: var(--ink3);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  margin-bottom: 4px;
+}
+
+.sv {
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--c1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+body.bn .sv {
+  color: var(--ink);
+}
+
+.sv.ok {
+  color: #10B981;
+  text-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+}
+
+.sv.mid {
+  color: #F59E0B;
+  text-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+}
+
+.sv.err {
+  color: #EF4444;
+  text-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+}
+
+body.bn .sv.ok {
+  color: #009933;
+}
+
+body.bn .sv.mid {
+  color: #CC8800;
+}
+
+body.bn .sv.err {
+  color: #CC3333;
+}
+
+/* ── LOG ───────────────────────────────────────────────– */
+.log {
+  font-family: var(--mono);
+  font-size: 0.61rem;
+  line-height: 1.8;
+  background: var(--bg);
+  border: 1px solid var(--bdr);
+  border-radius: var(--r);
+  padding: 8px 10px;
+  height: 130px;
+  overflow-y: auto;
+}
+
+.le {
+  border-bottom: 1px solid var(--bdr);
+  padding: 1px 0;
+}
+
+.lt {
+  color: var(--ink3);
+  margin-right: 6px;
+}
+
+.lok {
+  color: var(--c4);
+}
+
+.lw {
+  color: var(--c3);
+}
+
+body.bn .lok {
+  color: var(--ink2);
+}
+
+body.bn .lw {
+  color: var(--ink3);
+}
+
+/* ── BADGES ────────────────────────────────────────────– */
+.badge {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.06em;
+}
+
+.bok {
+  background: var(--c4);
+  color: #fff;
+}
+
+.berr {
+  background: var(--c5);
+  color: #fff;
+}
+
+.btipo {
+  background: var(--c6);
+  color: #fff;
+}
+
+body.bn .bok,
+body.bn .berr,
+body.bn .btipo {
+  background: var(--ink);
+  color: #fff;
+}
+
+/* ── INBOX ─────────────────────────────────────────────– */
+.inbox {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.ic {
+  background: var(--bg2);
+  border: 1px solid var(--bdr);
+  border-radius: var(--r2);
+  padding: 12px;
+  transition: border-color 0.2s;
+}
+
+.ic:hover {
+  border-color: var(--c1);
+}
+
+body.bn .ic:hover {
+  border-color: var(--ink);
+}
+
+.ih {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.im {
+  font-family: var(--mono);
+  font-size: 0.57rem;
+  color: var(--ink3);
+  margin-left: auto;
+}
+
+.ib {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  line-height: 1.6;
+  background: var(--bg);
+  border: 1px solid var(--bdr);
+  border-radius: var(--r);
+  padding: 8px;
+  max-height: 100px;
+  overflow-y: auto;
+  word-break: break-word;
+  color: var(--ink2);
+}
+
+.ii {
+  max-width: 210px;
+  border-radius: var(--r);
+  margin-top: 6px;
+  display: block;
+  border: 1px solid var(--bdr);
+}
+
+/* ── METRICAS INBOX ────────────────────────────────────– */
+.icm {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(68px, 1fr));
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.icmb {
+  background: var(--bg1);
+  border: 1px solid var(--bdr);
+  border-radius: var(--r);
+  padding: 5px 7px;
+  text-align: center;
+}
+
+.icml {
+  font-family: var(--mono);
+  font-size: 0.52rem;
+  color: var(--ink3);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 2px;
+}
+
+.icmv {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--c1);
+}
+
+body.bn .icmv {
+  color: var(--ink);
+}
+
+/* ── BITS ──────────────────────────────────────────────– */
+.bits {
+  font-family: var(--mono);
+  font-size: 0.61rem;
+  letter-spacing: 0.1em;
+  background: var(--bg);
+  border: 1px solid var(--bdr);
+  border-radius: var(--r);
+  padding: 7px;
+  word-break: break-all;
+  line-height: 1.7;
+}
+
+.b1 {
+  color: var(--c1);
+  font-weight: 700;
+}
+
+.b0 {
+  color: var(--ink3);
+}
+
+body.bn .b1 {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+body.bn .b0 {
+  color: var(--ink4);
+}
+
+/* ── DROP ZONE ─────────────────────────────────────────– */
+.dz {
+  border: 2px dashed var(--bdr2);
+  border-radius: var(--r2);
+  padding: 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 10px;
+}
+
+.dz:hover,
+.dz.ov {
+  border-color: var(--c1);
+  background: var(--bg2);
+}
+
+body.bn .dz:hover,
+body.bn .dz.ov {
+  border-color: var(--ink);
+}
+
+.dz p {
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  color: var(--ink3);
+  pointer-events: none;
+  line-height: 1.6;
+}
+
+/* ── AUDIO RECORDING ───────────────────────────────────– */
+.arec {
+  background: var(--bg2);
+  border: 1px solid var(--bdr);
+  border-radius: var(--r2);
+  padding: 12px;
+  margin-bottom: 10px;
+}
+
+.wfb {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 28px;
+  margin-top: 8px;
+}
+
+.wb {
+  width: 4px;
+  background: var(--c1);
+  border-radius: 2px;
+  min-height: 3px;
+  transition: height 0.1s;
+}
+
+body.bn .wb {
+  background: var(--ink);
+}
+
+.rsts {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--ink3);
+  margin-top: 6px;
+}
+
+.rtmr {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--c1);
+  letter-spacing: 0.1em;
+  display: none;
+}
+
+body.bn .rtmr {
+  color: var(--ink);
+}
+
+.bgrec.grabando {
+  background: var(--c5);
+  border-color: var(--c5);
+  animation: recP 1.1s ease-in-out infinite;
+}
+
+@keyframes recP {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(239, 68, 68, 0);
+  }
+}
+
+/* ── LEYENDAS ──────────────────────────────────────────– */
+.leg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--ink2);
+}
+
+.ld2 {
+  width: 12px;
+  height: 3px;
+  border-radius: 1.5px;
+  display: inline-block;
+  margin-right: 5px;
+  vertical-align: middle;
+  box-shadow: 0 0 4px currentColor;
+  opacity: 0.8;
+}
+
+/* ── SPINNER ───────────────────────────────────────────– */
+.gspn {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--bdr);
+  border-top-color: var(--c1);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: none;
+  flex-shrink: 0;
+}
+
+.gspn.on {
+  display: block;
+}
+
+body.bn .gspn {
+  border-top-color: var(--ink);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.bspn {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--bdr);
+  border-top-color: var(--c1);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  display: none;
+}
+
+.bspn.on {
+  display: inline-block;
+}
+
+body.bn .bspn {
+  border-top-color: var(--ink);
+}
+
+/* ── TRAFFIC LIGHTS ────────────────────────────────────– */
+.traffic {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.55rem;
+  font-weight: 700;
+}
+
+.light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transition: all 0.25s;
+}
+
+.light.green {
+  background: #10B981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+}
+
+.light.yellow {
+  background: #F59E0B;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+}
+
+.light.red {
+  background: #EF4444;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.6);
+}
+
+body.bn .light.green {
+  background: #009933;
+}
+
+body.bn .light.yellow {
+  background: #CC8800;
+}
+
+body.bn .light.red {
+  background: #CC3333;
+}

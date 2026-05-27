@@ -1,0 +1,120 @@
+/* ════════════════════════════════════════════════════════════
+   COMMSIM V3 — CSS MODULAR
+   Variables y estilos base
+════════════════════════════════════════════════════════════ */
+
+/* ── TEMA OSCURO (por defecto) ─────────────────────────────── */
+:root {
+  --bg: #0D1117;
+  --bg1: #161B22;
+  --bg2: #1C2128;
+  --bg3: #21262D;
+  --wh: #FFFFFF;
+  --ink: #E6EDF3;
+  --ink2: #8B949E;
+  --ink3: #484F58;
+  --ink4: #30363D;
+  --bdr: #30363D;
+  --bdr2: #58A6FF;
+
+  /* Colores funcionales */
+  --c1: #00F5FF; /* Cyan — primario */
+  --c2: #7C3AED; /* Púrpura — secundario */
+  --c3: #F59E0B; /* Ámbar — advertencia */
+  --c4: #10B981; /* Verde — éxito */
+  --c5: #EF4444; /* Rojo — error */
+  --c6: #3B82F6; /* Azul — info */
+  --c7: #EC4899; /* Rosa — recepción */
+  --c8: #8B5CF6; /* Violeta — especial */
+
+  /* Sombras */
+  --sh: 0 2px 16px rgba(0, 0, 0, 0.5);
+  --sh2: 0 8px 40px rgba(0, 0, 0, 0.7);
+
+  /* Tipografía */
+  --mono: 'Space Mono', 'Courier New', monospace;
+  --sans: 'Syne', system-ui, sans-serif;
+
+  /* Bordes y espacios */
+  --r: 6px;
+  --r2: 12px;
+
+  /* Animaciones */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --spg: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── TEMA CLARO ───────────────────────────────────────────── */
+body.bn {
+  --bg: #F5F3EF;
+  --bg1: #EDEDEA;
+  --bg2: #E4E2DE;
+  --bg3: #D8D5D0;
+  --wh: #FFFFFF;
+  --ink: #0C0C0C;
+  --ink2: #3A3A3A;
+  --ink3: #7A7A7A;
+  --ink4: #BCBCBC;
+  --bdr: #D0CCC6;
+  --bdr2: #0C0C0C;
+
+  --c1: #0066CC;
+  --c2: #7A3A8D;
+  --c3: #CC8800;
+  --c4: #009933;
+  --c5: #CC3333;
+  --c6: #0066CC;
+  --c7: #CC3388;
+  --c8: #6633CC;
+
+  --sh: 0 2px 10px rgba(0, 0, 0, 0.08);
+  --sh2: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* ── RESET BASE ─────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 13px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.35s var(--ease), color 0.35s var(--ease);
+}
+
+/* ── SCROLLBAR ESTILIZADO ──────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, var(--c1), var(--c2));
+  border-radius: 3px;
+  transition: background 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, var(--c2), var(--c1));
+}
+
+/* ── FUENTES DE GOOGLE ─────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap');
