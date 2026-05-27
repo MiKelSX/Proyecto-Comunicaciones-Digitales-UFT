@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CommSim v3</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/variables.css">
+<link rel="stylesheet" href="/static/css/layout.css">
+<link rel="stylesheet" href="/static/css/components.css">
+<link rel="stylesheet" href="/static/css/utilities.css">
+<link rel="stylesheet" href="/static/css/animations.css">
 <style>
 /* ── VARIABLES COLOR ─────────────────────────────────── */
 :root{
@@ -23,8 +28,8 @@ body.bn{
   --bg:#F5F3EF; --bg1:#EDEDEA; --bg2:#E4E2DE; --bg3:#D8D5D0;
   --wh:#FFFFFF; --ink:#0C0C0C; --ink2:#3A3A3A; --ink3:#7A7A7A; --ink4:#BCBCBC;
   --bdr:#D0CCC6; --bdr2:#0C0C0C;
-  --c1:#0C0C0C; --c2:#3A3A3A; --c3:#7A7A7A; --c4:#0C0C0C;
-  --c5:#3A3A3A; --c6:#0C0C0C; --c7:#5A5A5A; --c8:#3A3A3A;
+  --c1:#0066CC; --c2:#7A3A8D; --c3:#CC8800; --c4:#009933;
+  --c5:#CC3333; --c6:#0066CC; --c7:#CC3388; --c8:#6633CC;
   --sh:0 2px 10px rgba(0,0,0,.08); --sh2:0 6px 24px rgba(0,0,0,.12);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -32,9 +37,10 @@ html{font-size:13px}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);
   height:100vh;overflow:hidden;display:flex;flex-direction:column;
   transition:background .35s var(--ease),color .35s var(--ease)}
-::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-track{background:var(--bg2)}
-::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:2px}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg2);border-radius:3px}
+::-webkit-scrollbar-thumb{background:linear-gradient(90deg,var(--c1),var(--c2));border-radius:3px;transition:background .2s}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(90deg,var(--c2),var(--c1))}
 
 /* ── HEADER ────────────────────────────────────────────── */
 .hdr{flex-shrink:0;height:52px;background:var(--bg1);border-bottom:1px solid var(--bdr);
@@ -50,10 +56,10 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);
 .logo-ico svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round}
 body.bn .logo-ico{background:var(--ink)}
 .sep{width:1px;height:26px;background:var(--bdr);flex-shrink:0}
-.npill{font-family:var(--mono);font-size:.66rem;font-weight:700;letter-spacing:.1em;
-  padding:4px 10px;border-radius:20px;
-  background:linear-gradient(90deg,var(--c2),var(--c1));color:#fff;white-space:nowrap}
-body.bn .npill{background:var(--ink);color:#fff}
+.npill{font-family:var(--mono);font-size:.68rem;font-weight:800;letter-spacing:.12em;
+  padding:6px 14px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,.2);
+  background:linear-gradient(135deg,var(--c2),var(--c1));color:#fff;white-space:nowrap;text-transform:uppercase}
+body.bn .npill{background:linear-gradient(135deg,#333,#666);color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 .plbl{font-family:var(--mono);font-size:.62rem;color:var(--ink3);white-space:nowrap}
 /* LEDs */
 .leds{display:flex;align-items:center;gap:10px}
@@ -109,9 +115,9 @@ body.bn .tab::after{background:var(--ink)}
 /* ── CARDS ─────────────────────────────────────────────── */
 .card{background:var(--bg1);border:1px solid var(--bdr);border-radius:var(--r2);
   padding:14px;margin-bottom:12px;box-shadow:var(--sh);
-  transition:box-shadow .25s,border-color .25s}
-.card:hover{box-shadow:var(--sh2);border-color:var(--bdr2)}
-body.bn .card:hover{border-color:var(--ink)}
+  transition:box-shadow .3s,border-color .3s,background .3s}
+.card:hover{box-shadow:var(--sh2);border-color:var(--c1);background:var(--bg2)}
+body.bn .card:hover{border-color:var(--ink);background:var(--bg1)}
 .ch{display:flex;align-items:center;gap:7px;margin-bottom:12px;
   padding-bottom:10px;border-bottom:1px solid var(--bdr)}
 .ct{font-family:var(--mono);font-size:.64rem;font-weight:700;
@@ -131,12 +137,13 @@ body.bn .cp{background:var(--ink);box-shadow:none}
 canvas{display:block;width:100%;border-radius:var(--r);
   border:1px solid var(--bdr);background:var(--bg)}
 .cvw{position:relative;margin-bottom:8px}
-.cvl{position:absolute;top:5px;left:7px;font-family:var(--mono);
-  font-size:.55rem;color:var(--ink3);pointer-events:none;z-index:1}
-.leg{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;
-  font-family:var(--mono);font-size:.56rem;color:var(--ink3)}
-.ld2{width:10px;height:2px;border-radius:1px;display:inline-block;
-  margin-right:4px;vertical-align:middle}
+.cvl{position:absolute;top:6px;left:8px;font-family:var(--mono);
+  font-size:.58rem;color:var(--ink2);pointer-events:none;z-index:1;font-weight:700;
+  background:linear-gradient(135deg,rgba(0,0,0,.4),rgba(0,0,0,.2));padding:4px 8px;border-radius:4px}
+.leg{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px;
+  font-family:var(--mono);font-size:.58rem;color:var(--ink2)}
+.ld2{width:12px;height:3px;border-radius:1.5px;display:inline-block;
+  margin-right:5px;vertical-align:middle;box-shadow:0 0 4px currentColor;opacity:0.8}
 
 /* ── CONTROLES ─────────────────────────────────────────── */
 .ctrl{display:flex;align-items:center;gap:9px;margin-bottom:9px;flex-wrap:wrap}
@@ -206,19 +213,21 @@ body.bn .ttab.on{background:var(--ink);color:var(--wh)}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));
   gap:8px;margin-bottom:12px}
 .stat{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r);
-  padding:10px 12px;text-align:center;
-  transition:transform .2s var(--spg),border-color .2s}
-.stat:hover{transform:translateY(-2px);border-color:var(--c1)}
-body.bn .stat:hover{border-color:var(--ink)}
+  padding:12px 14px;text-align:center;position:relative;cursor:help;
+  transition:transform .2s var(--spg),border-color .2s,box-shadow .2s}
+.stat:hover{transform:translateY(-3px);border-color:var(--c1);box-shadow:0 4px 12px rgba(0,245,255,.15)}
+body.bn .stat:hover{border-color:var(--ink);box-shadow:0 4px 12px rgba(0,0,0,.1)}
 .sl{font-family:var(--mono);font-size:.54rem;color:var(--ink3);
   text-transform:uppercase;letter-spacing:.09em;margin-bottom:4px}
-.sv{font-family:var(--mono);font-size:1.1rem;font-weight:700;
-  line-height:1;color:var(--c1)}
+.sv{font-family:var(--mono);font-size:1.2rem;font-weight:800;
+  line-height:1;color:var(--c1);text-shadow:0 1px 2px rgba(0,0,0,.1)}
 body.bn .sv{color:var(--ink)}
-.sv.ok{color:var(--c4)}
-.sv.mid{color:var(--c3)}
-.sv.err{color:var(--c5)}
-body.bn .sv.ok,.bn .sv.mid,.bn .sv.err{color:var(--ink)}
+.sv.ok{color:#10B981;text-shadow:0 0 6px rgba(16,185,129,.4)}
+.sv.mid{color:#F59E0B;text-shadow:0 0 6px rgba(245,158,11,.4)}
+.sv.err{color:#EF4444;text-shadow:0 0 6px rgba(239,68,68,.4)}
+body.bn .sv.ok{color:#009933}
+body.bn .sv.mid{color:#CC8800}
+body.bn .sv.err{color:#CC3333}
 
 /* ── LOG ───────────────────────────────────────────────── */
 .log{font-family:var(--mono);font-size:.61rem;line-height:1.8;
@@ -314,6 +323,96 @@ body.bn .toast{background:var(--ink);color:var(--wh)}
   animation:spin .6s linear infinite;display:none}
 .bspn.on{display:inline-block}
 body.bn .bspn{border-top-color:var(--ink)}
+
+/* ── SEMÁFOROS Y QUALITY INDICATORS ─────────────────── */
+.traffic{display:inline-flex;align-items:center;gap:4px;font-size:.55rem;font-weight:700}
+.light{width:8px;height:8px;border-radius:50%;transition:all .25s}
+.light.green{background:#10B981;box-shadow:0 0 6px rgba(16,185,129,.6)}
+.light.yellow{background:#F59E0B;box-shadow:0 0 6px rgba(245,158,11,.6)}
+.light.red{background:#EF4444;box-shadow:0 0 6px rgba(239,68,68,.6)}
+body.bn .light.green{background:#009933}
+body.bn .light.yellow{background:#CC8800}
+body.bn .light.red{background:#CC3333}
+
+/* ── TOOLTIPS ───────────────────────────────────────── */
+.tooltip{position:relative;cursor:help;border-bottom:1px dotted var(--ink3)}
+.tooltip::after{content:attr(data-tip);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);
+  background:var(--bg1);color:var(--ink);padding:6px 10px;border-radius:var(--r);
+  font-size:.58rem;white-space:nowrap;opacity:0;pointer-events:none;
+  transition:opacity .2s;margin-bottom:4px;border:1px solid var(--bdr)}
+.tooltip:hover::after{opacity:1;pointer-events:all}
+body.bn .tooltip::after{background:var(--bg1);border-color:var(--bdr)}
+
+/* ── EXPLICACIONES INLINE ───────────────────────────── */
+.explain{font-family:var(--mono);font-size:.54rem;color:var(--ink3);
+  margin-top:4px;padding:4px 8px;background:var(--bg2);border-left:2px solid var(--c1);
+  border-radius:2px;display:none}
+.explain.show{display:block}
+body.bn .explain{border-color:var(--ink);background:var(--bg2)}
+
+/* ── PROGRESS BAR ───────────────────────────────────── */
+.progress{width:100%;height:3px;background:var(--bg3);border-radius:2px;
+  overflow:hidden;margin:8px 0}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--c4),var(--c1));
+  animation:progress 2s ease-in-out infinite}
+@keyframes progress{0%,100%{width:0%}50%{width:100%}}
+
+/* ── NUEVA SECCIÓN DE COMPARACIÓN ───────────────────── */
+.comp-panel{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:600px){.comp-panel{grid-template-columns:1fr}}
+
+/* ── MODO EXPLICATIVO ───────────────────────────────── */
+.explain-simple{font-family:var(--mono);font-size:.62rem;color:var(--ink2);
+  background:var(--bg2);padding:10px;border-radius:var(--r);margin-bottom:8px;
+  line-height:1.5;border-left:3px solid var(--c1)}
+body.bn .explain-simple{background:var(--bg3);border-left-color:var(--ink)}
+.explain-simple strong{color:var(--c1);font-weight:700}
+body.bn .explain-simple strong{color:var(--ink)}
+
+/* ── TOOLTIPS MEJORADOS ─────────────────────────────── */
+.stat[title]::after{content:attr(title);position:absolute;bottom:100%;left:50%;
+  transform:translateX(-50%) translateY(-8px);background:var(--bg1);
+  border:1px solid var(--bdr2);color:var(--c1);padding:7px 12px;
+  border-radius:var(--r);font-size:.54rem;white-space:nowrap;opacity:0;
+  visibility:hidden;z-index:100;transition:opacity .2s,visibility .2s;
+  font-family:var(--mono);font-weight:400;box-shadow:var(--sh2);pointer-events:none}
+.stat:hover[title]::after{opacity:1;visibility:visible;transform:translateX(-50%) translateY(-4px)}
+body.bn .stat[title]::after{background:var(--bg2);color:var(--ink)}
+
+/* ── INDICADORES DE CALIDAD ─────────────────────────── */
+.quality-indicator{display:inline-flex;align-items:center;gap:6px;
+  font-size:.60rem;font-weight:700;padding:6px 10px;
+  background:var(--bg2);border-radius:var(--r);border:1px solid var(--bdr)}
+.qi-light{width:10px;height:10px;border-radius:50%;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.2);transition:all .3s}
+.qi-light.ok{background:linear-gradient(135deg,#10B981,#059669);
+  box-shadow:0 0 8px rgba(16,185,129,.8),inset 0 1px 2px rgba(0,0,0,.2)}
+.qi-light.warn{background:linear-gradient(135deg,#F59E0B,#D97706);
+  box-shadow:0 0 8px rgba(245,158,11,.8),inset 0 1px 2px rgba(0,0,0,.2)}
+.qi-light.err{background:linear-gradient(135deg,#EF4444,#DC2626);
+  box-shadow:0 0 8px rgba(239,68,68,.8),inset 0 1px 2px rgba(0,0,0,.2)}
+
+/* ── PANELES DE INFORMACIÓN ─────────────────────────── */
+.info-panel{background:var(--bg2);border:1px solid var(--bdr);
+  border-radius:var(--r);padding:10px 12px;margin-bottom:8px;
+  font-family:var(--mono);font-size:.60rem;color:var(--ink3)}
+.info-panel .label{font-weight:700;color:var(--ink2);display:inline}
+.info-panel .value{color:var(--c1);font-weight:700;margin-left:4px;display:inline}
+body.bn .info-panel .value{color:var(--ink)}
+
+/* ── ANIMACIONES MEJORADAS ───────────────────────────── */
+@keyframes slideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+.animate-in{animation:slideIn .3s var(--ease)}
+.pulse-on{animation:pulse 1.5s ease-in-out infinite}
+
+/* ── GRÁFICOS CON INFORMACIÓN ───────────────────────── */
+.graph-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;font-size:.58rem}
+.graph-info-item{background:var(--bg2);border:1px solid var(--bdr);
+  border-radius:var(--r);padding:6px 8px;font-family:var(--mono)}
+.graph-info-label{font-weight:700;color:var(--ink2);display:block;margin-bottom:2px}
+.graph-info-value{color:var(--c1);font-weight:700;font-size:.66rem}
+body.bn .graph-info-value{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -336,7 +435,7 @@ body.bn .bspn{border-top-color:var(--ink)}
       <div class="ldg"><div class="ld lrx" id="lRX"></div><span class="ll">RX</span></div>
     </div>
     <div class="sep"></div>
-    <button class="tbtn" id="btnTema">🎨 Modo B&amp;N</button>
+    <button class="tbtn" id="btnTema" title="Cambiar tema: claro (Light) / oscuro (Dark)">🌞 Tema</button>
     <div class="sep"></div>
     <select class="ns" id="selNodo">
       <option value="A">Nodo A — Emisor</option>
@@ -363,14 +462,14 @@ body.bn .bspn{border-top-color:var(--ink)}
     <div class="ch"><div class="cp"></div><span class="ct">Parámetros del Canal</span></div>
     <div class="g2">
       <div>
-        <div class="ctrl"><span class="cl">SNR (dB)</span><input type="range" id="rSNR" min="0" max="40" step="1" value="20"><span class="cv2" id="vSNR">20</span></div>
-        <div class="ctrl"><span class="cl">Portadora Hz</span><input type="range" id="rFC" min="100" max="2000" step="50" value="400"><span class="cv2" id="vFC">400</span></div>
-        <div class="ctrl"><span class="cl">Tasa símbolo</span><input type="range" id="rSR" min="10" max="200" step="10" value="40"><span class="cv2" id="vSR">40</span></div>
+        <div class="ctrl"><span class="cl" title="Signal-to-Noise Ratio: Mayor valor = menos ruido. Rango ideal 15-40 dB">SNR (dB)</span><input type="range" id="rSNR" min="0" max="40" step="1" value="20"><span class="cv2" id="vSNR">20</span></div>
+        <div class="ctrl"><span class="cl" title="Frecuencia de la portadora en Hz. Define el rango del espectro">Portadora Hz</span><input type="range" id="rFC" min="100" max="2000" step="50" value="400"><span class="cv2" id="vFC">400</span></div>
+        <div class="ctrl"><span class="cl" title="Velocidad de transmisión de símbolos. Mayor valor = más rápido pero más sensible al ruido">Tasa símbolo</span><input type="range" id="rSR" min="10" max="200" step="10" value="40"><span class="cv2" id="vSR">40</span></div>
       </div>
       <div>
-        <div class="ctrl"><span class="cl">Modulación</span><select id="selMod"></select></div>
-        <div class="ctrl"><span class="cl">Codificación</span><select id="selCod"></select></div>
-        <div class="ctrl"><span class="cl">Bits/símbolo</span><input type="range" id="rBPS" min="1" max="4" step="1" value="2"><span class="cv2" id="vBPS">2</span></div>
+        <div class="ctrl"><span class="cl" title="Tipo de modulación (ASK, BPSK, QAM, OFDM)">Modulación</span><select id="selMod"></select></div>
+        <div class="ctrl"><span class="cl" title="Código corrector de errores (Ninguna, Hamming, Repetición)">Codificación</span><select id="selCod"></select></div>
+        <div class="ctrl"><span class="cl" title="Bits de información por símbolo transmitido">Bits/símbolo</span><input type="range" id="rBPS" min="1" max="4" step="1" value="2"><span class="cv2" id="vBPS">2</span></div>
       </div>
     </div>
   </div>
@@ -378,34 +477,49 @@ body.bn .bspn{border-top-color:var(--ink)}
   <div class="g2">
     <div class="card">
       <div class="ch"><div class="cp"></div><span class="ct">Señales en el Tiempo</span></div>
+      <div class="explain-simple" style="display:block">
+        ℹ️ Visualización de la portadora original (azul), señal modulada (morado) y señal ruidosa recibida (naranja).
+      </div>
       <div class="cvw"><canvas id="cvT" height="130"></canvas><span class="cvl">Amplitud / Tiempo (s)</span></div>
       <div class="leg">
-        <span><span class="ld2" style="background:var(--c1)"></span>Portadora</span>
-        <span><span class="ld2" style="background:var(--c2)"></span>Modulada</span>
-        <span><span class="ld2" style="background:var(--c3);opacity:.8"></span>Ruidosa</span>
+        <span><span class="ld2" style="background:var(--c1)"></span>Portadora (referencia)</span>
+        <span><span class="ld2" style="background:var(--c2)"></span>Modulada (información)</span>
+        <span><span class="ld2" style="background:var(--c3);opacity:.8"></span>Ruidosa (recibida)</span>
       </div>
     </div>
     <div class="card">
       <div class="ch"><div class="cp"></div><span class="ct">Espectro de Potencia (PSD)</span></div>
-      <div class="cvw"><canvas id="cvS" height="130"></canvas><span class="cvl">Hz / dB</span></div>
+      <div class="explain-simple" style="display:block">
+        ℹ️ Distribución de energía en el dominio de frecuencias. Muestra dónde se concentra la potencia de la señal.
+      </div>
+      <div class="cvw"><canvas id="cvS" height="130"></canvas><span class="cvl">Frecuencia (Hz) / Potencia (dB)</span></div>
     </div>
   </div>
 
   <div class="g3">
     <div class="card">
       <div class="ch"><div class="cp"></div><span class="ct">Constelación IQ</span></div>
+      <div class="explain-simple" style="display:block">
+        ℹ️ Plano complejo I/Q. Triángulos = puntos ideales TX. Círculos = puntos recibidos. Separación = ruido.
+      </div>
       <canvas id="cvC" height="170"></canvas>
       <div class="leg" style="margin-top:5px">
-        <span><span class="ld2" style="background:var(--c4)"></span>TX ideal</span>
-        <span><span class="ld2" style="background:var(--c7)"></span>RX recibido</span>
+        <span><span class="ld2" style="background:var(--c4)"></span>TX ideal (teórico)</span>
+        <span><span class="ld2" style="background:var(--c7)"></span>RX recibido (con ruido)</span>
       </div>
     </div>
     <div class="card">
       <div class="ch"><div class="cp"></div><span class="ct">Eye Diagram</span></div>
+      <div class="explain-simple" style="display:block">
+        ℹ️ Apertura del ojo = calidad. Ojo abierto = buena sincronización. Ojo cerrado = interferencia.
+      </div>
       <canvas id="cvE" height="170"></canvas>
     </div>
     <div class="card">
       <div class="ch"><div class="cp"></div><span class="ct">Stream de Bits NRZ</span></div>
+      <div class="explain-simple" style="display:block">
+        ℹ️ Representación del flujo binario en código NRZ (Non-Return-to-Zero). 1=alto, 0=bajo.
+      </div>
       <canvas id="cvN" height="72"></canvas>
       <div style="height:6px"></div>
       <div class="bits" id="bLive">Iniciando...</div>
@@ -414,6 +528,9 @@ body.bn .bspn{border-top-color:var(--ink)}
 
   <div class="card">
     <div class="ch"><div class="cp"></div><span class="ct">Espectro Electromagnético — Posición de la señal</span></div>
+    <div class="explain-simple" style="display:block">
+      ℹ️ Localización automática de la portadora en el espectro EM. Desde ondas de radio hasta rayos gamma.
+    </div>
     <div class="cvw"><canvas id="cvEM" height="62"></canvas></div>
     <div class="emlbl">
       <span>Radio</span><span>Microondas</span><span>Infrarrojo</span>
@@ -482,25 +599,69 @@ body.bn .bspn{border-top-color:var(--ink)}
     </div>
     <div>
       <div class="card">
-        <div class="ch"><div class="cp"></div><span class="ct">Resultado de Transmisión</span></div>
+        <div class="ch"><div class="cp"></div><span class="ct">Resultado de Transmisión (Última Enviada)</span></div>
+        <div style="margin-bottom:10px">
+          <div class="explain-simple" id="txExplain" style="display:none">
+            💡 <strong>Cómo interpretar:</strong> <span id="txExplainText"></span>
+          </div>
+          <div class="traffic">
+            <span class="light" id="qualityLight"></span>
+            <span id="qualityText">—</span>
+          </div>
+        </div>
         <div class="stats">
-          <div class="stat"><div class="sl">BER</div><div class="sv" id="tBER">—</div></div>
-          <div class="stat"><div class="sl">SNR</div><div class="sv" id="tSNR">—</div></div>
-          <div class="stat"><div class="sl">Éxito</div><div class="sv" id="tEx">—</div></div>
-          <div class="stat"><div class="sl">Bytes</div><div class="sv" id="tBy">—</div></div>
-          <div class="stat"><div class="sl">MD5</div><div class="sv" id="tMD">—</div></div>
-          <div class="stat"><div class="sl">Overhead</div><div class="sv" id="tOH">—</div></div>
+          <div class="stat" title="Tasa de error de bits. Idealmente &lt;1%">
+            <div class="sl">BER</div><div class="sv" id="tBER">—</div>
+          </div>
+          <div class="stat" title="Relación Señal-Ruido. Mayor es mejor. Ideal &gt;15 dB">
+            <div class="sl">SNR</div><div class="sv" id="tSNR">—</div>
+          </div>
+          <div class="stat" title="Porcentaje de bits correctos">
+            <div class="sl">Éxito</div><div class="sv" id="tEx">—</div>
+          </div>
+          <div class="stat" title="Cantidad de bytes transmitidos">
+            <div class="sl">Bytes</div><div class="sv" id="tBy">—</div>
+          </div>
+          <div class="stat" title="Verificación MD5 de integridad">
+            <div class="sl">MD5</div><div class="sv" id="tMD">—</div>
+          </div>
+          <div class="stat" title="Expansión por codificación (Hamming=1.75x, Repetición=3x)">
+            <div class="sl">Overhead</div><div class="sv" id="tOH">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="cp"></div><span class="ct">Resultados Totales de Transmisión</span></div>
+        <div class="stats">
+          <div class="stat" title="Total de mensajes enviados">
+            <div class="sl">Enviados</div><div class="sv" id="txTotales">0</div>
+          </div>
+          <div class="stat" title="Volumen total de datos transmitidos">
+            <div class="sl">Bytes Totales</div><div class="sv" id="txBytesTot">0</div>
+          </div>
+          <div class="stat" title="BER promedio de todas las transmisiones">
+            <div class="sl">BER Promedio</div><div class="sv" id="txBERProm">—</div>
+          </div>
+          <div class="stat" title="SNR promedio de todas las transmisiones">
+            <div class="sl">SNR Promedio</div><div class="sv" id="txSNRProm">—</div>
+          </div>
+          <div class="stat" title="Porcentaje de éxito promedio">
+            <div class="sl">Éxito Promedio</div><div class="sv" id="txExProm">—</div>
+          </div>
+          <div class="stat" title="Integridad de datos (checksums correctos)">
+            <div class="sl">Integridad</div><div class="sv" id="txIntegr">—</div>
+          </div>
         </div>
         <div class="g2" style="margin-bottom:8px">
-          <div class="cvw"><canvas id="cvTS" height="90"></canvas><span class="cvl">TX vs RX</span></div>
-          <div class="cvw"><canvas id="cvTP" height="90"></canvas><span class="cvl">Espectro TX</span></div>
+          <div class="cvw"><canvas id="cvTS" height="90"></canvas><span class="cvl">TX vs RX — Envío (azul) vs Recibido (naranja)</span></div>
+          <div class="cvw"><canvas id="cvTP" height="90"></canvas><span class="cvl">Espectro TX — Contenido frecuencial</span></div>
         </div>
         <div class="g2">
-          <div class="cvw"><canvas id="cvTC" height="130"></canvas><span class="cvl">Constelación RX</span></div>
+          <div class="cvw"><canvas id="cvTC" height="130"></canvas><span class="cvl">Constelación RX — Puntos ideales (triángulos) vs recibidos (círculos)</span></div>
           <div>
-            <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Bits TX</div>
+            <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Bits TX (Original)</div>
             <div class="bits" id="bTX" style="margin-bottom:7px">—</div>
-            <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Bits RX</div>
+            <div style="font-family:var(--mono);font-size:.56rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">Bits RX (Recibido)</div>
             <div class="bits" id="bRX">—</div>
           </div>
         </div>
@@ -527,24 +688,41 @@ body.bn .bspn{border-top-color:var(--ink)}
     </div>
     <div>
       <div class="card">
-        <div class="ch"><div class="cp"></div><span class="ct">Métricas de Recepción en Vivo</span></div>
+        <div class="ch"><div class="cp"></div><span class="ct">Resultado de Transmisión (Última Recibida)</span></div>
+        <div style="margin-bottom:10px">
+          <div class="traffic">
+            <span class="light" id="rxQualityLight"></span>
+            <span id="rxQualityText">—</span>
+          </div>
+        </div>
         <div class="stats">
-          <div class="stat"><div class="sl">Recibidos</div><div class="sv" id="rxT">0</div></div>
-          <div class="stat"><div class="sl">Bytes RX</div><div class="sv" id="rxB">0</div></div>
-          <div class="stat"><div class="sl">Errores</div><div class="sv" id="rxE">0</div></div>
-          <div class="stat"><div class="sl">Integridad</div><div class="sv" id="rxI">—</div></div>
-          <div class="stat"><div class="sl">BER prom</div><div class="sv" id="rxBER">—</div></div>
-          <div class="stat"><div class="sl">SNR prom</div><div class="sv" id="rxSNR">—</div></div>
+          <div class="stat" title="BER de la última transmisión recibida"><div class="sl">BER Última</div><div class="sv" id="rxBERUlt">—</div></div>
+          <div class="stat" title="SNR de la última transmisión recibida"><div class="sl">SNR Última</div><div class="sv" id="rxSNRUlt">—</div></div>
+          <div class="stat" title="Bytes de la última transmisión"><div class="sl">Bytes Última</div><div class="sv" id="rxBytesUlt">—</div></div>
+          <div class="stat" title="Tipo de la última transmisión"><div class="sl">Tipo Última</div><div class="sv" id="rxTipoUlt">—</div></div>
+          <div class="stat" title="MD5 de la última transmisión"><div class="sl">MD5 Última</div><div class="sv" id="rxMDUlt">—</div></div>
+          <div class="stat" title="Overhead de la última transmisión"><div class="sl">Overhead Última</div><div class="sv" id="rxOHUlt">—</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="cp"></div><span class="ct">Resultados Totales de Métricas de Recepción</span></div>
+        <div class="stats">
+          <div class="stat" title="Total de mensajes recibidos desde el nodo peer"><div class="sl">Recibidos</div><div class="sv" id="rxT">0</div></div>
+          <div class="stat" title="Volumen total de datos recibidos"><div class="sl">Bytes Totales</div><div class="sv" id="rxB">0</div></div>
+          <div class="stat" title="Mensajes que llegaron con errores detectados"><div class="sl">Errores</div><div class="sv" id="rxE">0</div></div>
+          <div class="stat" title="Porcentaje de checksums MD5 correctos"><div class="sl">Integridad</div><div class="sv" id="rxI">—</div></div>
+          <div class="stat" title="BER promedio de todas las recepciones"><div class="sl">BER Promedio</div><div class="sv" id="rxBER">—</div></div>
+          <div class="stat" title="SNR promedio de todas las recepciones"><div class="sl">SNR Promedio</div><div class="sv" id="rxSNR">—</div></div>
         </div>
         <div class="g2" style="margin-bottom:8px">
-          <div class="cvw"><canvas id="cvRE" height="120"></canvas><span class="cvl">Eye Diagram RX</span></div>
-          <div class="cvw"><canvas id="cvRC" height="120"></canvas><span class="cvl">Constelación RX</span></div>
+          <div class="cvw"><canvas id="cvRE" height="120"></canvas><span class="cvl">Eye Diagram RX — Apertura del ojo recibida</span></div>
+          <div class="cvw"><canvas id="cvRC" height="120"></canvas><span class="cvl">Constelación RX — Puntos recibidos en plano I/Q</span></div>
         </div>
         <div class="cvw" style="margin-bottom:8px">
-          <canvas id="cvRS" height="80"></canvas><span class="cvl">Espectro señal recibida</span>
+          <canvas id="cvRS" height="80"></canvas><span class="cvl">Espectro señal recibida — Contenido frecuencial del RX</span>
         </div>
         <div class="cvw">
-          <canvas id="cvRN" height="60"></canvas><span class="cvl">Bits RX (NRZ)</span>
+          <canvas id="cvRN" height="60"></canvas><span class="cvl">Bits RX (NRZ) — Flujo binario recibido</span>
         </div>
       </div>
       <div class="card">
@@ -598,850 +776,12 @@ body.bn .bspn{border-top-color:var(--ink)}
 </div><!-- /main -->
 <div id="toasts"></div>
 
-<script>
-"use strict";
-/* ═══════════════════════════════════════════════════════
-   ESTADO
-═══════════════════════════════════════════════════════ */
-const A={
-  nodo:'A', par:'B', tipo:'texto', bn:false,
-  txN:0, rxN:0, rxBytes:0, rxErr:0,
-  berAcc:0, snrAcc:0,
-  lastR:null, berH:[],
-  imgB64:null, fileB64:null, fileNom:'',
-  audB64:null, audNom:'',
-  bufEsp:[], // max 1200
-  rafId:null, lastF:0, FPS:1000/30,
-  liveD:null, liveTs:0,
-  mRec:null, audCh:[], grabando:false, recSeg:0, recInt:null,
-  MAX_AU:256*1024,
-};
-
-/* ═══════════════════════════════════════════════════════
-   UTILS
-═══════════════════════════════════════════════════════ */
-const $=id=>document.getElementById(id);
-const DPR=Math.min(window.devicePixelRatio||1,2);
-
-function toast(msg){
-  const d=document.createElement('div');
-  d.className='toast'; d.textContent=msg;
-  $('toasts').appendChild(d);
-  setTimeout(()=>d.remove(),4000);
-}
-
-function addLog(id,msg,cls='ok'){
-  const c=$(id);
-  const e=document.createElement('div');
-  e.className='le l'+cls;
-  const ts=new Date().toLocaleTimeString('es',{hour12:false});
-  e.innerHTML=`<span class="lt">[${ts}]</span>${msg}`;
-  c.insertBefore(e,c.firstChild);
-  while(c.children.length>60) c.removeChild(c.lastChild);
-}
-
-function esc(s){
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-/* ═══════════════════════════════════════════════════════
-   CANVAS — tamaño fijo con fallback 300px para paneles ocultos
-═══════════════════════════════════════════════════════ */
-function cv(id){
-  const el=$(id); if(!el) return null;
-  // Obtener ancho real del canvas considerando si el contenedor está visible
-  let W=el.parentElement?.offsetWidth||el.offsetWidth;
-  if(!W || W<10)W=300;
-  W=Math.max(W,50);
-  const H=parseInt(el.getAttribute('height'))||150;
-  const Wp=Math.round(W*DPR), Hp=Math.round(H*DPR);
-  // Siempre actualizar para paneles recién visibles
-  if(el.width!==Wp || el.height!==Hp){
-    el.width=Wp; el.height=Hp; el._cW=Wp; el._cH=Hp;
-  }
-  const ctx=el.getContext('2d',{willReadFrequently:false});
-  ctx.scale(DPR,DPR); ctx.W=W; ctx.H=H;
-  return ctx;
-}
-
-// Colores actuales según modo
-function C(){
-  const bn=A.bn;
-  return {
-    bg:   bn?'#F5F3EF':'#0D1117',
-    bg1:  bn?'#EDEDEA':'#161B22',
-    bg2:  bn?'#E4E2DE':'#1C2128',
-    bdr:  bn?'#D0CCC6':'#30363D',
-    ink:  bn?'#0C0C0C':'#E6EDF3',
-    ink2: bn?'#3A3A3A':'#8B949E',
-    ink3: bn?'#7A7A7A':'#484F58',
-    c1:   bn?'#0C0C0C':'#00F5FF',
-    c2:   bn?'#3A3A3A':'#7C3AED',
-    c3:   bn?'#7A7A7A':'#F59E0B',
-    c4:   bn?'#0C0C0C':'#10B981',
-    c5:   bn?'#3A3A3A':'#EF4444',
-    c6:   bn?'#0C0C0C':'#3B82F6',
-    c7:   bn?'#5A5A5A':'#EC4899',
-    c8:   bn?'#3A3A3A':'#8B5CF6',
-  };
-}
-
-function fill(ctx,color){ctx.fillStyle=color;ctx.fillRect(0,0,ctx.W,ctx.H);}
-
-function grid(ctx,nx=6,ny=4,col){
-  const c=col||C();
-  ctx.save();ctx.strokeStyle=c.bdr;ctx.lineWidth=.6;
-  for(let i=1;i<nx;i++){const x=(ctx.W/nx)*i;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,ctx.H);ctx.stroke();}
-  for(let i=1;i<ny;i++){const y=(ctx.H/ny)*i;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(ctx.W,y);ctx.stroke();}
-  ctx.restore();
-}
-
-function zeroline(ctx,col){
-  const c=col||C();
-  ctx.save();ctx.strokeStyle=c.ink3;ctx.lineWidth=.7;ctx.setLineDash([4,4]);
-  ctx.beginPath();ctx.moveTo(0,ctx.H/2);ctx.lineTo(ctx.W,ctx.H/2);ctx.stroke();
-  ctx.setLineDash([]);ctx.restore();
-}
-
-function norm(a){
-  if(!a||!a.length)return [];
-  const mn=Math.min(...a),mx=Math.max(...a),r=Math.max(mx-mn,1e-8);
-  return a.map(v=>(v-mn)/r);
-}
-
-function wave(ctx,data,color,alpha,dashed,lw){
-  if(!data||!data.length)return;
-  alpha=alpha||1; lw=lw||1.4;
-  const n=data.length,N=norm(data);
-  ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.lineWidth=lw;
-  if(dashed)ctx.setLineDash([5,4]);
-  ctx.beginPath();
-  N.forEach((v,i)=>{
-    const x=(i/(n-1))*ctx.W, y=ctx.H-v*ctx.H*.84-ctx.H*.08;
-    i?ctx.lineTo(x,y):ctx.moveTo(x,y);
-  });
-  ctx.stroke();ctx.setLineDash([]);ctx.restore();
-}
-
-function waveFill(ctx,data,color){
-  if(!data||!data.length)return;
-  const n=data.length,N=norm(data);
-  const pts=N.map((v,i)=>({x:(i/(n-1))*ctx.W,y:ctx.H-v*ctx.H*.84-ctx.H*.08}));
-  const g=ctx.createLinearGradient(0,0,0,ctx.H);
-  g.addColorStop(0,color+'66');g.addColorStop(1,color+'00');
-  ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(pts[0].x,ctx.H);
-  pts.forEach(p=>ctx.lineTo(p.x,p.y));
-  ctx.lineTo(pts[pts.length-1].x,ctx.H);ctx.closePath();ctx.fill();
-  ctx.strokeStyle=color;ctx.lineWidth=1.5;
-  ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();
-}
-
-/* ═══════════════════════════════════════════════════════
-   API
-═══════════════════════════════════════════════════════ */
-async function api(url,ops){
-  try{return await(await fetch(url,ops||{})).json();}
-  catch(e){console.warn('[API]',url,e);return null;}
-}
-
-/* ═══════════════════════════════════════════════════════
-   CARGAR OPCIONES y PARÁMETROS
-═══════════════════════════════════════════════════════ */
-async function loadOpts(){
-  const d=await api('/api/opciones');
-  if(!d)return;
-  const sm=$('selMod'),sc=$('selCod');
-  d.mods.forEach(m=>{sm.add(new Option(m,m));});
-  d.cods.forEach(c=>{sc.add(new Option(c,c));});
-}
-
-async function loadParams(){
-  const d=await api('/api/'+A.nodo+'/params');
-  if(!d)return;
-  $('rSNR').value=d.snr; $('vSNR').textContent=d.snr;
-  $('rFC').value=d.fc;   $('vFC').textContent=d.fc;
-  $('rSR').value=d.sr;   $('vSR').textContent=d.sr;
-  $('rBPS').value=d.bps; $('vBPS').textContent=d.bps;
-  $('selMod').value=d.mod;
-  $('selCod').value=d.cod;
-}
-
-async function setParam(k,v){
-  await api('/api/'+A.nodo+'/params',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({[k]:v})
-  });
-}
-
-/* ═══════════════════════════════════════════════════════
-   GRÁFICAS EN VIVO — RAF throttled a 30fps, un solo loop
-═══════════════════════════════════════════════════════ */
-async function fetchLive(){
-  if(performance.now()-A.liveTs<600)return;
-  A.liveTs=performance.now();
-  const d=await api('/api/'+A.nodo+'/vivo');
-  if(!d)return;
-  A.liveD=d;
-  if(d.mo){
-    A.bufEsp.push(...d.mo.slice(0,16));
-    if(A.bufEsp.length>1200)A.bufEsp=A.bufEsp.slice(-1200);
-  }
-}
-
-function loop(ts){
-  // Throttle a 30fps
-  if(ts-A.lastF<A.FPS){A.rafId=requestAnimationFrame(loop);return;}
-  A.lastF=ts;
-  const c=C();
-  const d=A.liveD;
-  if(d){
-    try{
-      // 1. Señales tiempo
-      const c1=cv('cvT');
-      if(c1){
-        fill(c1,c.bg);grid(c1,6,4,c);zeroline(c1,c);
-        if(d.po)wave(c1,d.po,c.c1,.75);
-        if(d.mo)wave(c1,d.mo,c.c2,.95,false,1.7);
-        if(d.ru)wave(c1,d.ru,c.c3,.5,true,1.1);
-      }
-      // 2. Espectro
-      const c2=cv('cvS');
-      if(c2&&d.fq&&d.pt){fill(c2,c.bg);grid(c2,8,5,c);waveFill(c2,d.pt,c.c6);}
-      // 3. Constelación ideal live
-      drawConstIdeal('cvC',d.mod,c);
-      // 4. Eye Diagram animado
-      drawEyeAnim('cvE',c);
-      // 5. NRZ bits
-      const c5=cv('cvN');
-      if(c5&&d.bits){fill(c5,c.bg);grid(c5,8,2,c);drawNRZ(c5,d.bits,c);
-        const bLive=$('bLive');
-        if(bLive)bLive.innerHTML=d.bits.slice(0,48).map(b=>`<span class="b${b}">${b}</span>`).join('');
-      }
-      // 6. EM Spectrum
-      drawEM('cvEM',d.fc);
-    }catch(e){
-      console.warn('[LOOP DRAW]',e.message);
-    }
-  }
-  fetchLive(); // no-op si fue hace < 600ms
-  A.rafId=requestAnimationFrame(loop);
-}
-
-/* ═══════════════════════════════════════════════════════
-   FUNCIONES DE DIBUJO
-═══════════════════════════════════════════════════════ */
-function drawNRZ(ctx,bits,c){
-  const n=Math.min(bits.length,32),bw=ctx.W/n;
-  ctx.fillStyle=c.c1+'22';
-  bits.slice(0,n).forEach((b,i)=>{if(b)ctx.fillRect(i*bw,ctx.H*.15,bw,ctx.H*.7);});
-  ctx.strokeStyle=c.c1;ctx.lineWidth=2.2;
-  ctx.beginPath();
-  bits.slice(0,n).forEach((b,i)=>{
-    const x0=i*bw,x1=(i+1)*bw,y=b?ctx.H*.15:ctx.H*.85;
-    if(i===0){ctx.moveTo(x0,y);}
-    else{const yp=bits[i-1]?ctx.H*.15:ctx.H*.85;
-      if(yp!==y){ctx.lineTo(x0,yp);ctx.lineTo(x0,y);}}
-    ctx.lineTo(x1,y);
-  });
-  ctx.stroke();
-  ctx.fillStyle=c.ink3;ctx.font=(8*DPR)+'px Space Mono';
-  ctx.save();ctx.scale(1/DPR,1/DPR);
-  ctx.fillText('1',4*DPR,(ctx.H*.2)*DPR);
-  ctx.fillText('0',4*DPR,(ctx.H*.88)*DPR);
-  ctx.restore();
-}
-
-function drawConstIdeal(id,mod,c){
-  const ctx=cv(id);if(!ctx)return;
-  fill(ctx,c.bg);
-  const W=ctx.W,H=ctx.H,cx=W/2,cy=H/2;
-  [.28,.56,.84].forEach(r=>{
-    ctx.strokeStyle=c.bdr;ctx.lineWidth=.7;
-    ctx.beginPath();ctx.arc(cx,cy,Math.min(W,H)*r*.47,0,2*Math.PI);ctx.stroke();
-  });
-  ctx.strokeStyle=c.ink3;ctx.lineWidth=.8;
-  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
-  ctx.fillStyle=c.ink3;ctx.font=(8*DPR)+'px Space Mono';
-  ctx.save();ctx.scale(1/DPR,1/DPR);
-  ctx.fillText('I',(W-11)*DPR,(cy+12)*DPR);
-  ctx.fillText('Q',(cx+4)*DPR,12*DPR);
-  ctx.restore();
-  const pts=idealPts(mod||'BPSK'),sc=Math.min(W,H)*.27;
-  pts.forEach(([x,y])=>{
-    ctx.beginPath();ctx.arc(cx+x*sc,cy-y*sc,8,0,2*Math.PI);
-    ctx.fillStyle=c.c4+'33';ctx.fill();
-    ctx.beginPath();ctx.arc(cx+x*sc,cy-y*sc,4,0,2*Math.PI);
-    ctx.fillStyle=c.c4;ctx.fill();
-    ctx.strokeStyle=c.c4;ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.arc(cx+x*sc,cy-y*sc,7,0,2*Math.PI);ctx.stroke();
-  });
-}
-
-function drawConstData(id,tx,rx,mod,c){
-  const ctx=cv(id);if(!ctx)return;
-  fill(ctx,c.bg);
-  const W=ctx.W,H=ctx.H,cx=W/2,cy=H/2;
-  [.28,.56,.84].forEach(r=>{ctx.strokeStyle=c.bdr;ctx.lineWidth=.7;ctx.beginPath();ctx.arc(cx,cy,Math.min(W,H)*r*.47,0,2*Math.PI);ctx.stroke();});
-  ctx.strokeStyle=c.ink3;ctx.lineWidth=.8;
-  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
-  const sc=Math.min(W,H)*.25;
-  if(tx&&tx.length){
-    ctx.fillStyle=c.c4;
-    tx.slice(0,80).forEach(([x,y])=>{
-      ctx.beginPath();ctx.moveTo(cx+x*sc,cy-y*sc-6);
-      ctx.lineTo(cx+x*sc-4,cy-y*sc+4);ctx.lineTo(cx+x*sc+4,cy-y*sc+4);
-      ctx.closePath();ctx.fill();
-    });
-  }
-  if(rx&&rx.length){
-    rx.slice(0,120).forEach(([x,y])=>{
-      ctx.beginPath();ctx.arc(cx+x*sc,cy-y*sc,2.5,0,2*Math.PI);
-      ctx.fillStyle=c.c7+'CC';ctx.fill();
-    });
-  }
-  if(!tx||!tx.length)drawConstIdeal(id,mod,c);
-}
-
-function idealPts(mod){
-  if(mod==='ASK')return[[0,0],[1,0]];
-  if(mod==='QAM')return[[-1,-1],[-1,1],[1,-1],[1,1]];
-  if(mod==='OFDM')return[[-1,0],[1,0]];
-  return[[-1,0],[1,0]];
-}
-
-function drawEyeAnim(id,c){
-  const ctx=cv(id);if(!ctx)return;
-  fill(ctx,c.bg);grid(ctx,4,4,c);
-  const t=performance.now()/1000;
-  ctx.lineWidth=.9;
-  for(let i=0;i<35;i++){
-    const ph=(i*.23+t*.12)%.6-.3,am=.5+Math.sin(i*.7+t*.35)*.28;
-    ctx.beginPath();ctx.globalAlpha=.13;ctx.strokeStyle=c.c8;
-    for(let x=0;x<=ctx.W;x+=2){
-      const y=ctx.H/2-Math.sin((x/ctx.W*2+ph)*Math.PI)*ctx.H*am*.42;
-      x?ctx.lineTo(x,y):ctx.moveTo(x,y);
-    }
-    ctx.stroke();
-  }
-  ctx.globalAlpha=1;
-  ctx.strokeStyle=c.c3;ctx.lineWidth=1;ctx.setLineDash([3,3]);
-  ctx.beginPath();ctx.moveTo(ctx.W/2,0);ctx.lineTo(ctx.W/2,ctx.H);ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.fillStyle=c.c4+'18';
-  ctx.fillRect(ctx.W*.43,ctx.H*.22,ctx.W*.14,ctx.H*.56);
-}
-
-function drawEyeData(id,rows,c){
-  if(!rows||!rows.length){drawEyeAnim(id,c);return;}
-  const ctx=cv(id);if(!ctx)return;
-  fill(ctx,c.bg);grid(ctx,4,4,c);ctx.lineWidth=.9;
-  rows.forEach(row=>{
-    const mn=Math.min(...row),mx=Math.max(...row),r=Math.max(mx-mn,1e-8);
-    ctx.beginPath();ctx.globalAlpha=.15;ctx.strokeStyle=c.c8;
-    row.forEach((v,i)=>{const x=(i/(row.length-1))*ctx.W,y=ctx.H-((v-mn)/r)*ctx.H*.84-ctx.H*.08;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
-    ctx.stroke();
-  });
-  ctx.globalAlpha=1;
-  ctx.strokeStyle=c.c3;ctx.lineWidth=1;ctx.setLineDash([3,3]);
-  ctx.beginPath();ctx.moveTo(ctx.W/2,0);ctx.lineTo(ctx.W/2,ctx.H);ctx.stroke();
-  ctx.setLineDash([]);
-}
-
-function drawEM(id,fc){
-  const ctx=cv(id);if(!ctx)return;
-  const W=ctx.W,H=ctx.H;
-  // Colores del espectro EM — visibles en ambos modos
-  const bandas=A.bn
-    ?[['#EBEBEB','#D0D0D0'],['#B8B8B8','#A0A0A0'],['#888888','#707070'],
-      ['#585858','#404040'],['#2C2C2C','#1C1C1C'],['#141414','#0A0A0A'],['#060606','#000000']]
-    :[['#FF0050','#FF4500'],['#FF8C00','#FFB300'],['#FFE600','#AAEE00'],
-      ['#00D4FF','#0066FF'],['#8800FF','#CC00EE'],['#FF00AA','#FF0066'],['#E8E8FF','#C0C0FF']];
-  bandas.forEach(([c1,c2],i)=>{
-    const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,c1);g.addColorStop(1,c2);
-    ctx.fillStyle=g;ctx.fillRect(i*(W/7),0,W/7,H);
-  });
-  // Marcador fc
-  const pos=Math.min(Math.log10(fc||400)/7,1)*W*.32;
-  ctx.fillStyle='rgba(255,255,255,.92)';ctx.fillRect(pos-1.5,0,3,H);
-  ctx.save();ctx.fillStyle='#fff';
-  ctx.font='bold '+(8*DPR)+'px Space Mono';ctx.scale(1/DPR,1/DPR);
-  ctx.fillText(Math.round(fc||400)+'Hz',(pos+5)*DPR,12*DPR);
-  ctx.restore();
-}
-
-/* ═══════════════════════════════════════════════════════
-   RENDER RESULTADO TX/RX
-═══════════════════════════════════════════════════════ */
-function renderR(r){
-  if(!r)return;
-  A.lastR=r;
-  const c=C();
-  const ber=(r.ber*100).toFixed(3);
-  // Stats tx
-  $('tBER').textContent=ber+'%';
-  $('tBER').className='sv '+(r.ber<.01?'ok':(r.ber<.1?'mid':'err'));
-  $('tSNR').textContent=r.snr+'dB';
-  $('tEx').textContent=r.exito+'%';
-  $('tEx').className='sv '+(r.exito>90?'ok':(r.exito>70?'mid':'err'));
-  $('tBy').textContent=r.bytes_tx+'B';
-  $('tMD').textContent=r.ck_ok?'✓ OK':'✗ ERR';
-  $('tMD').className='sv '+(r.ck_ok?'ok':'err');
-  $('tOH').textContent='×'+r.overhead;
-  // Señal TX vs RX
-  const c1=cv('cvTS');
-  if(c1){fill(c1,c.bg);grid(c1,6,4,c);zeroline(c1,c);wave(c1,r.v_tx,c.c2,.9,false,1.7);wave(c1,r.v_rx,c.c3,.55,true,1.1);}
-  // Espectro TX
-  const c2=cv('cvTP');
-  if(c2){fill(c2,c.bg);grid(c2,8,4,c);waveFill(c2,r.potencia,c.c6);}
-  // Constelación
-  const tx=(r.ctx||[]).map(p=>[p[0],p[1]]);
-  const rx=(r.crx||[]).map(p=>[p[0],p[1]]);
-  drawConstData('cvTC',tx,rx,r.mod,c);
-  // Bits
-  $('bTX').innerHTML=(r.b_orig||[]).map(b=>`<span class="b${b}">${b}</span>`).join('');
-  $('bRX').innerHTML=(r.b_rx||[]).map(b=>`<span class="b${b}">${b}</span>`).join('');
-  // Stats tab
-  $('sBER').textContent=ber+'%';$('sSNR').textContent=r.snr+'dB';
-  $('sEx').textContent=r.exito+'%';$('sBy').textContent=r.bytes_tx+'B';
-  $('sIn').textContent=r.ck_ok?'✓ OK':'✗ ERR';$('sOH').textContent='×'+r.overhead;
-  // Historial BER
-  A.berH.push(r.ber);if(A.berH.length>35)A.berH=A.berH.slice(-35);
-  drawBERH(c);drawEspectrog(c);drawHisto(r.v_rx||[],c);
-  // Panel recibir
-  drawEyeData('cvRE',r.ojo||[],c);
-  drawConstData('cvRC',tx,rx,r.mod,c);
-  const c3=cv('cvRS');if(c3){fill(c3,c.bg);grid(c3,8,3,c);waveFill(c3,r.potencia,c.c7);}
-  const c4=cv('cvRN');if(c4){fill(c4,c.bg);grid(c4,8,2,c);drawNRZ(c4,r.b_rx||[],c);}
-}
-
-function drawBERH(c){
-  const ctx=cv('cvBH');if(!ctx)return;
-  fill(ctx,c.bg);grid(ctx,6,5,c);
-  const d=A.berH;if(d.length<2)return;
-  const mx=Math.max(...d,.001);
-  const pts=d.map((v,i)=>({x:(i/(d.length-1))*ctx.W,y:ctx.H-(v/mx)*ctx.H*.84-ctx.H*.08}));
-  // Umbral 1%
-  const yu=ctx.H-(0.01/mx)*ctx.H*.84-ctx.H*.08;
-  ctx.strokeStyle=c.c5+'66';ctx.lineWidth=1;ctx.setLineDash([3,3]);
-  ctx.beginPath();ctx.moveTo(0,yu);ctx.lineTo(ctx.W,yu);ctx.stroke();ctx.setLineDash([]);
-  ctx.fillStyle=c.ink3;ctx.font=(7*DPR)+'px Space Mono';ctx.save();ctx.scale(1/DPR,1/DPR);
-  ctx.fillText('BER=1%',4*DPR,(yu-3)*DPR);ctx.restore();
-  // Área
-  const g=ctx.createLinearGradient(0,0,0,ctx.H);g.addColorStop(0,c.c1+'55');g.addColorStop(1,c.c1+'00');
-  ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(pts[0].x,ctx.H);
-  pts.forEach(p=>ctx.lineTo(p.x,p.y));ctx.lineTo(pts[pts.length-1].x,ctx.H);ctx.closePath();ctx.fill();
-  ctx.strokeStyle=c.c1;ctx.lineWidth=1.6;
-  ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();
-  ctx.fillStyle=c.c1;
-  pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,3,0,2*Math.PI);ctx.fill();});
-  ctx.fillStyle=c.ink2;ctx.font=(8*DPR)+'px Space Mono';ctx.save();ctx.scale(1/DPR,1/DPR);
-  ctx.fillText('BER: '+(d[d.length-1]*100).toFixed(3)+'%',6*DPR,14*DPR);ctx.restore();
-}
-
-async function drawBERCurva(){
-  $('btnBER').querySelector('.bi').textContent='Calculando...';
-  $('btnBER').disabled=true;
-  const d=await api('/api/'+A.nodo+'/ber_curva');
-  $('btnBER').querySelector('.bi').textContent='Calcular';
-  $('btnBER').disabled=false;
-  if(!d||!d.snr)return;
-  const c=C(),ctx=cv('cvBC');if(!ctx)return;
-  fill(ctx,c.bg);grid(ctx,6,5,c);
-  const W=ctx.W,H=ctx.H,smn=d.snr[0],smx=d.snr[d.snr.length-1];
-  const lmn=Math.log10(1e-5),lmx=0;
-  const bl=d.ber.map(b=>Math.log10(Math.max(b,1e-5)));
-  const pts=d.snr.map((s,i)=>({x:(s-smn)/(smx-smn)*W,y:H-((bl[i]-lmn)/(lmx-lmn))*H*.84-H*.08}));
-  const teo=d.snr.map((s,i)=>{const b=Math.max(.5*Math.exp(-s/10*Math.LN10/2),1e-5);return{x:pts[i].x,y:H-((Math.log10(b)-lmn)/(lmx-lmn))*H*.84-H*.08};});
-  ctx.strokeStyle=c.ink3;ctx.lineWidth=1;ctx.setLineDash([4,3]);
-  ctx.beginPath();teo.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();ctx.setLineDash([]);
-  const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,c.c1+'55');g.addColorStop(1,c.c1+'00');
-  ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(pts[0].x,H);pts.forEach(p=>ctx.lineTo(p.x,p.y));ctx.lineTo(pts[pts.length-1].x,H);ctx.closePath();ctx.fill();
-  ctx.strokeStyle=c.c1;ctx.lineWidth=2.2;
-  ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();
-  ctx.fillStyle=c.c1;
-  pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,4,0,2*Math.PI);ctx.fill();ctx.strokeStyle=c.bg;ctx.lineWidth=1.5;ctx.stroke();});
-  ctx.fillStyle=c.ink2;ctx.font=(8*DPR)+'px Space Mono';ctx.save();ctx.scale(1/DPR,1/DPR);
-  ctx.fillText('─ Medido   - - Teórico BPSK',8*DPR,14*DPR);ctx.restore();
-  toast('Curva BER calculada ✓');
-}
-
-function drawEspectrog(c){
-  const ctx=cv('cvSG');if(!ctx)return;
-  const W=ctx.W,H=ctx.H,buf=A.bufEsp;
-  if(buf.length<32){fill(ctx,c.bg);return;}
-  const nC=Math.min(Math.round(W),150),fSz=Math.floor(buf.length/nC);
-  if(fSz<4){fill(ctx,c.bg);return;}
-  for(let col=0;col<nC;col++){
-    const fr=buf.slice(col*fSz,col*fSz+fSz);
-    const N=Math.min(fr.length,32),bins=N/2;
-    for(let k=0;k<bins;k++){
-      let re=0,im=0;
-      for(let n=0;n<N;n++){re+=(fr[n]||0)*Math.cos(2*Math.PI*k*n/N);im-=(fr[n]||0)*Math.sin(2*Math.PI*k*n/N);}
-      const db=20*Math.log10(Math.sqrt(re*re+im*im)/N+1e-8);
-      const nrm=Math.max(0,Math.min(1,(db+60)/60));
-      ctx.fillStyle=A.bn?`rgb(${Math.round((1-nrm)*240)},${Math.round((1-nrm)*240)},${Math.round((1-nrm)*240)})`:`hsl(${240-nrm*240},80%,${10+nrm*50}%)`;
-      ctx.fillRect(col*(W/nC),H-(k/bins)*H,W/nC+1,H/bins+1);
-    }
-  }
-}
-
-function drawHisto(sig,c){
-  const ctx=cv('cvHA');if(!ctx)return;
-  fill(ctx,c.bg);grid(ctx,6,4,c);
-  if(!sig||!sig.length)return;
-  const nb=28,mn=Math.min(...sig),mx=Math.max(...sig),rng=Math.max(mx-mn,1e-8);
-  const bins=new Array(nb).fill(0);
-  sig.forEach(v=>bins[Math.min(Math.floor(((v-mn)/rng)*(nb-1)),nb-1)]++);
-  const maxB=Math.max(...bins,1),bw=ctx.W/nb;
-  bins.forEach((b,i)=>{
-    const bh=(b/maxB)*ctx.H*.84,x=i*bw,y=ctx.H-bh;
-    const norm=b/maxB;
-    const hue=A.bn?0:(200+i*(100/nb));
-    const sat=A.bn?'0%':'75%';
-    const lum=A.bn?`${60-Math.round(i*(40/nb))}%`:`${15+Math.round(norm*40)}%`;
-    ctx.fillStyle=A.bn?`rgba(12,12,12,${.2+.7*norm})`:`hsl(${hue},${sat},${lum})`;
-    ctx.fillRect(x,y,bw-1,bh);
-  });
-  // Campana gaussiana de referencia
-  ctx.strokeStyle=c.c1;ctx.lineWidth=1.5;ctx.beginPath();
-  for(let x=0;x<=ctx.W;x+=2){
-    const t=x/ctx.W;
-    const y=ctx.H-Math.exp(-((t-.5)**2)/(2*(.18**2)))*ctx.H*.84;
-    x?ctx.lineTo(x,y):ctx.moveTo(x,y);
-  }
-  ctx.stroke();
-}
-
-/* ═══════════════════════════════════════════════════════
-   TRANSMISIÓN
-═══════════════════════════════════════════════════════ */
-async function transmitir(){
-  const sp=$('spnE');
-  sp.classList.add('on');
-  $('btnEnv').disabled=true;
-  $('lTX').classList.add('on');
-  const cuerpo={tipo:A.tipo};
-  if(A.tipo==='texto')       cuerpo.texto=$('txtMsg').value||'CommSim test';
-  else if(A.tipo==='imagen'){if(A.imgB64)cuerpo.b64=A.imgB64;cuerpo.nom='imagen.png';}
-  else if(A.tipo==='audio'){
-    if(A.audB64){cuerpo.tipo='audio_grab';cuerpo.b64=A.audB64;cuerpo.nom=A.audNom||'grab.webm';}
-    else{cuerpo.tipo='audio_tono';cuerpo.freq=parseFloat($('rAF').value);}
-  }
-  else if(A.tipo==='archivo'){
-    if(!A.fileB64){toast('Selecciona un archivo primero');sp.classList.remove('on');$('btnEnv').disabled=false;$('lTX').classList.remove('on');return;}
-    cuerpo.b64=A.fileB64;cuerpo.nom=A.fileNom;
-  }
-  try{
-    const d=await api('/api/'+A.nodo+'/tx',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cuerpo)});
-    if(d&&d.ok){
-      renderR(d.resultado);
-      A.txN++;$('sTX').textContent=A.txN;
-      addLog('logTX','['+A.tipo.toUpperCase()+'] BER:'+(d.resultado.ber*100).toFixed(2)+'% SNR:'+d.resultado.snr+'dB '+(d.resultado.ck_ok?'✓':'✗')+' '+d.resultado.bytes_tx+'B','ok');
-      toast('TX OK — BER: '+(d.resultado.ber*100).toFixed(2)+'%');
-    }else{
-      addLog('logTX','[ERR] '+(d&&d.error?d.error:'desconocido'),'lw');
-      toast('Error en transmisión');
-    }
-  }catch(e){addLog('logTX','[EXC] '+e.message,'lw');}
-  sp.classList.remove('on');$('btnEnv').disabled=false;
-  setTimeout(()=>$('lTX').classList.remove('on'),1600);
-}
-
-/* ═══════════════════════════════════════════════════════
-   INBOX POLLING — cada 1s
-═══════════════════════════════════════════════════════ */
-let _rxB=0,_rxE=0,_berAcc=0,_snrAcc=0;
-async function sondear(){
-  const items=await api('/api/'+A.nodo+'/buzon');
-  if(!items||!items.length)return;
-  $('lRX').classList.add('on');
-  const c=C();
-  items.forEach(item=>{
-    A.rxN++;_rxB+=item.tam||0;
-    if(!item.ck_ok)_rxE++;
-    if(item.resultado){_berAcc+=item.resultado.ber||0;_snrAcc+=item.resultado.snr||0;}
-    addLog('logRX','['+item.tipo.toUpperCase()+'] '+(item.tam)+'B BER:'+(item.ber*100).toFixed(2)+'% '+(item.ck_ok?'✓':'⚠'),'ok');
-    renderItem(item,c);
-    if(item.resultado){
-      drawEyeData('cvRE',item.resultado.ojo||[],c);
-      const tx=(item.resultado.ctx||[]).map(p=>[p[0],p[1]]);
-      const rx2=(item.resultado.crx||[]).map(p=>[p[0],p[1]]);
-      drawConstData('cvRC',tx,rx2,item.resultado.mod,c);
-      const cr=cv('cvRS');if(cr){fill(cr,c.bg);grid(cr,8,3,c);waveFill(cr,item.resultado.potencia||[],c.c7);}
-      const cn=cv('cvRN');if(cn){fill(cn,c.bg);grid(cn,8,2,c);drawNRZ(cn,item.resultado.b_rx||[],c);}
-    }
-  });
-  $('rxCnt').textContent=A.rxN+' msg';
-  $('rxT').textContent=A.rxN;
-  $('rxB').textContent=_rxB>1024?(_rxB/1024).toFixed(1)+'KB':_rxB+'B';
-  $('rxE').textContent=_rxE;
-  $('rxE').className='sv '+(_rxE===0?'ok':(_rxE<3?'mid':'err'));
-  $('rxI').textContent=A.rxN>0?Math.round((1-_rxE/A.rxN)*100)+'%':'—';
-  $('rxBER').textContent=A.rxN>0?(_berAcc/A.rxN*100).toFixed(2)+'%':'—';
-  $('rxSNR').textContent=A.rxN>0?(_snrAcc/A.rxN).toFixed(1)+'dB':'—';
-  $('sRX').textContent=A.rxN;
-  setTimeout(()=>$('lRX').classList.remove('on'),1400);
-}
-
-function renderItem(item,c){
-  const lista=$('inbox');
-  // Eliminar placeholder inicial
-  const ph=lista.querySelector('div[style]');if(ph)ph.remove();
-  const ts=new Date(item.ts*1000).toLocaleTimeString('es',{hour12:false});
-  const ok=item.ck_ok;const r=item.resultado;const tipo=item.tipo||'texto';
-  let body='';
-  if(tipo==='texto'){
-    try{
-      const raw=atob(item.b64);
-      const txt=new TextDecoder().decode(Uint8Array.from(raw,ch=>ch.charCodeAt(0)));
-      body='<div class="ib">'+esc(txt)+'</div>';
-    }catch{body='<div class="ib">[Error decodificando]</div>';}
-  }else if(tipo==='imagen'){
-    const ext=(item.nom||'').split('.').pop()?.toLowerCase()||'png';
-    const mime={'jpg':'image/jpeg','jpeg':'image/jpeg','gif':'image/gif','webp':'image/webp'}[ext]||'image/png';
-    body='<img class="ii" src="data:'+mime+';base64,'+item.b64+'" alt="imagen">';
-  }else if(tipo==='audio_grab'||tipo==='audio_tono'){
-    const ext=(item.nom||'').endsWith('.wav')?'wav':'webm';
-    const mime=ext==='wav'?'audio/wav':'audio/webm';
-    body='<div style="display:flex;align-items:center;gap:8px;margin-top:6px"><span style="font-family:var(--mono);font-size:.63rem;color:var(--ink3)">🔊 '+(item.nom||'audio')+'</span><audio controls style="height:28px;flex:1" src="data:'+mime+';base64,'+item.b64+'"></audio></div>';
-  }else{
-    body='<div style="display:flex;align-items:center;gap:8px;margin-top:6px"><span style="font-family:var(--mono);font-size:.63rem;color:var(--ink3)">📁 '+(item.nom||'archivo')+' ('+item.tam+'B)</span><a href="data:application/octet-stream;base64,'+item.b64+'" download="'+(item.nom||'archivo.bin')+'" class="btn bsm" style="text-decoration:none"><span class="bi">💾 Guardar</span></a></div>';
-  }
-  let metricas='';
-  if(r){
-    metricas='<div class="icm">'+
-      '<div class="icmb"><div class="icml">BER</div><div class="icmv">'+(r.ber*100).toFixed(2)+'%</div></div>'+
-      '<div class="icmb"><div class="icml">SNR</div><div class="icmv">'+r.snr+'dB</div></div>'+
-      '<div class="icmb"><div class="icml">Éxito</div><div class="icmv">'+r.exito+'%</div></div>'+
-      '<div class="icmb"><div class="icml">Bytes</div><div class="icmv">'+r.bytes_tx+'</div></div>'+
-      '<div class="icmb"><div class="icml">MD5</div><div class="icmv">'+(r.ck_ok?'✓ OK':'✗ ERR')+'</div></div>'+
-      '<div class="icmb"><div class="icml">Mod.</div><div class="icmv">'+r.mod+'</div></div>'+
-      '</div>';
-  }
-  const el=document.createElement('div');el.className='ic';
-  el.innerHTML='<div class="ih">'+
-    '<span class="badge btipo">'+tipo.replace('_',' ').toUpperCase()+'</span>'+
-    '<span class="badge '+(ok?'bok':'berr')+'">'+(ok?'✓ ÍNTEGRO':'⚠ ADVERTENCIA')+'</span>'+
-    '<span class="im">'+ts+' · '+item.emisor+'→'+A.nodo+'</span>'+
-    '</div>'+body+metricas;
-  lista.insertBefore(el,lista.firstChild);
-  while(lista.children.length>20)lista.removeChild(lista.lastChild);
-}
-
-/* ═══════════════════════════════════════════════════════
-   AUDIO REAL
-═══════════════════════════════════════════════════════ */
-function iniciarGrab(){
-  if(!navigator.mediaDevices?.getUserMedia){toast('Sin soporte de micrófono');return;}
-  navigator.mediaDevices.getUserMedia({audio:true,video:false}).then(stream=>{
-    A.audCh=[];
-    const opts={};
-    if(MediaRecorder.isTypeSupported('audio/webm;codecs=opus'))opts.mimeType='audio/webm;codecs=opus';
-    A.mRec=new MediaRecorder(stream,opts);
-    A.mRec.ondataavailable=e=>{if(e.data&&e.data.size>0)A.audCh.push(e.data);};
-    A.mRec.onstop=()=>{
-      stream.getTracks().forEach(t=>t.stop());
-      const blob=new Blob(A.audCh,{type:A.mRec.mimeType||'audio/webm'});
-      if(blob.size>A.MAX_AU){toast('Audio muy largo (máx 256KB)');resetGrab();return;}
-      A.audNom='grab.'+(A.mRec.mimeType?.includes('wav')?'wav':'webm');
-      const r=new FileReader();
-      r.onload=ev=>{A.audB64=ev.target.result.split(',')[1];
-        const url=URL.createObjectURL(blob);
-        $('audPrev').innerHTML='<audio controls style="width:100%;margin-top:8px" src="'+url+'"></audio>';
-        $('rSts').textContent='✓ Grabado ('+(blob.size/1024).toFixed(1)+'KB) — listo para enviar';};
-      r.readAsDataURL(blob);resetGrab();
-    };
-    A.mRec.start(200);A.grabando=true;
-    $('btnGrb').classList.add('grabando');
-    $('btnGrb').querySelector('.bi').textContent='🔴 Grabando...';
-    $('btnStp').disabled=false;
-    $('rSts').textContent='Grabando desde el micrófono...';
-    $('rTmr').style.display='block';A.recSeg=0;
-    A.recInt=setInterval(()=>{
-      A.recSeg++;
-      const m=String(Math.floor(A.recSeg/60)).padStart(2,'0');
-      const s=String(A.recSeg%60).padStart(2,'0');
-      $('rTmr').textContent=m+':'+s;
-      if(A.recSeg>=30){detenerGrab();toast('Auto-stop 30s');}
-    },1000);
-    animBars();
-  }).catch(e=>toast('Micrófono: '+e.message));
-}
-function detenerGrab(){if(A.mRec&&A.grabando){A.mRec.stop();A.grabando=false;}}
-function resetGrab(){
-  clearInterval(A.recInt);A.recInt=null;A.recSeg=0;
-  $('btnGrb').classList.remove('grabando');
-  $('btnGrb').querySelector('.bi').textContent='🎙 Grabar';
-  $('btnStp').disabled=true;$('rTmr').style.display='none';
-}
-function animBars(){
-  const c=$('wfBars');
-  if(!c.children.length)for(let i=0;i<20;i++){const b=document.createElement('div');b.className='wb';b.style.height='3px';c.appendChild(b);}
-  function tick(){
-    if(!A.grabando){Array.from(c.children).forEach(b=>b.style.height='3px');return;}
-    Array.from(c.children).forEach(b=>b.style.height=(3+Math.random()*22)+'px');
-    setTimeout(tick,80);
-  }
-  tick();
-}
-
-/* ═══════════════════════════════════════════════════════
-   DROP ZONES Y ARCHIVOS
-═══════════════════════════════════════════════════════ */
-function setupDZ(dzId,inpId,cb){
-  const dz=$(dzId);
-  dz.addEventListener('click',()=>$(inpId).click());
-  ['dragover','dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{
-    e.preventDefault();dz.classList.toggle('ov',ev==='dragover');
-    if(ev==='drop'&&e.dataTransfer.files[0])cb(e.dataTransfer.files[0]);
-  }));
-  $(inpId).addEventListener('change',e=>{if(e.target.files[0])cb(e.target.files[0]);e.target.value='';});
-}
-function leerImg(f){
-  if(f.size>10*1024*1024){toast('Imagen >10MB');return;}
-  const r=new FileReader();
-  r.onload=ev=>{A.imgB64=ev.target.result.split(',')[1];
-    $('imgPrev').innerHTML='<img src="'+ev.target.result+'" style="max-width:200px;border-radius:var(--r);margin-top:8px;border:1px solid var(--bdr)">';};
-  r.readAsDataURL(f);
-}
-function leerArch(f){
-  if(f.size>1024*1024){toast('Archivo >1MB');return;}
-  const r=new FileReader();
-  r.onload=ev=>{A.fileB64=ev.target.result.split(',')[1]||btoa(ev.target.result);
-    A.fileNom=f.name;$('fileInfo').textContent='✓ '+f.name+' — '+(f.size/1024).toFixed(1)+'KB';};
-  r.readAsDataURL(f);
-}
-
-/* ═══════════════════════════════════════════════════════
-   CONEXIÓN DE CONTROLES
-═══════════════════════════════════════════════════════ */
-function conectar(){
-  // Sliders
-  [['rSNR','vSNR','snr'],['rFC','vFC','fc'],['rSR','vSR','sr'],['rBPS','vBPS','bps']].forEach(([r,v,k])=>{
-    $(r).addEventListener('input',e=>{$(v).textContent=e.target.value;setParam(k,parseFloat(e.target.value));});
-  });
-  $('selMod').addEventListener('change',e=>setParam('mod',e.target.value));
-  $('selCod').addEventListener('change',e=>setParam('cod',e.target.value));
-  $('rAF').addEventListener('input',e=>$('vAF').textContent=e.target.value+' Hz');
-
-  // Node select
-  $('selNodo').addEventListener('change',async e=>{
-    A.nodo=e.target.value;A.par=A.nodo==='A'?'B':'A';
-    $('nPill').textContent='NODO '+A.nodo;$('pLbl').textContent=A.par;
-    A.rxN=0;_rxB=0;_rxE=0;_berAcc=0;_snrAcc=0;A.berH=[];A.txN=0;A.lastR=null;
-    const inbox=$('inbox');
-    inbox.innerHTML='<div style="text-align:center;padding:32px;font-family:var(--mono);font-size:.65rem;color:var(--ink3)">Esperando transmisiones del peer...<br><span style="font-size:.58rem">Se actualizan automáticamente</span></div>';
-    try{
-      await loadParams();
-      toast('Nodo '+A.nodo+' activo');
-      console.log('[NODE] Cambiado a nodo',A.nodo);
-    }catch(e){
-      console.error('[NODE ERR]',e);
-      toast('Error al cambiar nodo');
-    }
-  });
-
-  // Tabs — con clase .on en lugar de atributo
-  document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
-    document.querySelectorAll('.pan').forEach(x=>x.classList.remove('on'));
-    t.classList.add('on');
-    const tabId=t.dataset.tab;
-    const pan=$('pan-'+tabId);
-    if(pan)pan.classList.add('on');
-    // Redibujar al cambiar de tab con delay para animación
-    if(A.lastR)setTimeout(()=>renderR(A.lastR),320);
-  }));
-
-  // Type tabs enviar
-  document.querySelectorAll('.ttab').forEach(t=>t.addEventListener('click',()=>{
-    document.querySelectorAll('.ttab').forEach(x=>x.classList.remove('on'));
-    t.classList.add('on');A.tipo=t.dataset.t;
-    ['texto','imagen','audio','archivo'].forEach(n=>$('inp-'+n).style.display='none');
-    $('inp-'+A.tipo).style.display='';
-  }));
-
-  // Botones
-  $('btnEnv').addEventListener('click',transmitir);
-  $('btnDemo').addEventListener('click',()=>{
-    $('txtMsg').value='CommSim v3 — Demo Nodo '+A.nodo+'→'+A.par+' | '+new Date().toLocaleTimeString()+' | Mod:'+$('selMod').value+' | SNR:'+$('rSNR').value+'dB';
-    transmitir();
-  });
-  $('btnBER').addEventListener('click',drawBERCurva);
-  $('btnTema').addEventListener('click',()=>{
-    A.bn=!A.bn;
-    document.body.classList.toggle('bn',A.bn);
-    $('btnTema').textContent=A.bn?'🎨 Modo Color':'⬛ Modo B&N';
-    if(A.lastR)setTimeout(()=>renderR(A.lastR),50);
-  });
-  $('btnGrb').addEventListener('click',iniciarGrab);
-  $('btnStp').addEventListener('click',detenerGrab);
-  $('btnTon').addEventListener('click',()=>{A.audB64=null;A.audNom='';$('audPrev').innerHTML='';$('rSts').textContent='Se enviará tono sinusoidal de prueba';toast('Tono de prueba seleccionado');});
-
-  setupDZ('dzImg','fImg',leerImg);
-  setupDZ('dzFile','fBin',leerArch);
-
-  window.addEventListener('resize',()=>{
-    // Invalidar cache de canvas para que se redibuje
-    document.querySelectorAll('canvas').forEach(el=>{
-      el._cW=null;el._cH=null;
-    });
-    if(A.lastR)setTimeout(()=>renderR(A.lastR),150);
-  });
-}
-
-/* ═══════════════════════════════════════════════════════
-   INIT — un único punto de entrada
-═══════════════════════════════════════════════════════ */
-async function init(){
-  try{
-    // Nodo desde URL
-    const n=new URL(location.href).searchParams.get('nodo');
-    if(n==='A'||n==='B'){
-      A.nodo=n;A.par=n==='A'?'B':'A';
-      $('selNodo').value=n;
-      $('nPill').textContent='NODO '+n;
-      $('pLbl').textContent=A.par;
-    }
-    // Cargar datos del servidor
-    console.log('[INIT] Cargando opciones y parámetros...');
-    await loadOpts();
-    await loadParams();
-    // Conectar eventos UI
-    conectar();
-    console.log('[INIT] UI conectada');
-    // Dibujar iniciales con retraso para asegurar DOM
-    setTimeout(()=>{
-      const c=C();
-      ['cvE','cvRE','cvC','cvRC'].forEach(id=>{
-        try{
-          if(id.includes('Eye'))drawEyeAnim(id,c);
-          else drawConstIdeal(id,'BPSK',c);
-        }catch(e){console.warn('[DRAW]',id,e.message);}
-      });
-    },100);
-    // Primer fetch de datos vivos
-    await fetchLive();
-    console.log('[INIT] Datos vivos cargados');
-    // Loop RAF — UN SOLO loop, nunca duplicado
-    if(!A.rafId)A.rafId=requestAnimationFrame(loop);
-    // Inbox polling cada 1s
-    setInterval(sondear,1200);
-    toast('CommSim v3 — Nodo '+A.nodo+' activo');
-    console.log('[INIT] Sistema iniciado correctamente');
-  }catch(e){
-    console.error('[INIT ERROR]',e);
-    toast('Error al inicializar: '+e.message);
-  }
-}
-
-// Punto de entrada único con manejo de errores
-window.addEventListener('DOMContentLoaded',init);
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
-else init();
+<!-- ═══════════════════════════════════════════════════════
+     MODULAR JAVASCRIPT SYSTEM
+     ═══════════════════════════════════════════════════════ -->
+<script type="module">
+  // Import main application module
+  import './static/js/modules/app.js';
 </script>
 </body>
 </html>

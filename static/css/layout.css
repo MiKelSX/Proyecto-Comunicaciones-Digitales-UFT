@@ -1,0 +1,143 @@
+/* LAYOUT — estructura de página */
+
+.hdr {
+  flex-shrink: 0;
+  height: 52px;
+  background: var(--bg1);
+  border-bottom: 1px solid var(--bdr);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  z-index: 100;
+  animation: slideD 0.4s var(--ease);
+}
+
+@keyframes slideD {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.tbar {
+  flex-shrink: 0;
+  display: flex;
+  background: var(--bg1);
+  border-bottom: 1px solid var(--bdr);
+  padding: 0 12px;
+  overflow-x: auto;
+}
+
+.main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 14px;
+}
+
+/* ── GRILLAS ───────────────────────────────────────────── */
+.g2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.g3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.g4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 860px) {
+  .g2,
+  .g3,
+  .g4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── PANELES Y TABS ────────────────────────────────────── */
+.pan {
+  display: none;
+}
+
+.pan.on {
+  display: block;
+  animation: panIn 0.3s var(--ease);
+}
+
+@keyframes panIn {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.card {
+  background: var(--bg1);
+  border: 1px solid var(--bdr);
+  border-radius: var(--r2);
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: var(--sh);
+  transition: box-shadow 0.3s, border-color 0.3s, background 0.3s;
+}
+
+.card:hover {
+  box-shadow: var(--sh2);
+  border-color: var(--c1);
+  background: var(--bg2);
+}
+
+body.bn .card:hover {
+  border-color: var(--ink);
+  background: var(--bg1);
+}
+
+/* ── CANVAS ────────────────────────────────────────────── */
+canvas {
+  display: block;
+  width: 100%;
+  border-radius: var(--r);
+  border: 1px solid var(--bdr);
+  background: var(--bg);
+}
+
+.cvw {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.cvl {
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--ink2);
+  pointer-events: none;
+  z-index: 1;
+  font-weight: 700;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+body.bn .cvl {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.15));
+}
