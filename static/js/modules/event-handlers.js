@@ -14,7 +14,7 @@ import {
   drawBERCurva,
 } from './graph-rendering.js';
 import { iniciarGrab, detenerGrab } from './audio-handler.js';
-import { setupDZ, leerImg, leerArch } from './file-handlers.js';
+import { setupDZ, leerImg, leerArch, limpiarImg, limpiarArch } from './file-handlers.js';
 
 // Transmit message
 export async function transmitir() {
