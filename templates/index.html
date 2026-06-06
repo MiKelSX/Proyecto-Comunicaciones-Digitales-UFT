@@ -221,13 +221,13 @@ body.bn .stat:hover{border-color:var(--ink);box-shadow:0 4px 12px rgba(0,0,0,.1)
   text-transform:uppercase;letter-spacing:.09em;margin-bottom:4px}
 .sv{font-family:var(--mono);font-size:1.2rem;font-weight:800;
   line-height:1;color:var(--c1);text-shadow:0 1px 2px rgba(0,0,0,.1)}
-body.bn .sv{color:var(--ink)}
+body.bn .sv{color:var(--c1);text-shadow:0 1px 2px rgba(255,255,255,.1)}
 .sv.ok{color:#10B981;text-shadow:0 0 6px rgba(16,185,129,.4)}
 .sv.mid{color:#F59E0B;text-shadow:0 0 6px rgba(245,158,11,.4)}
 .sv.err{color:#EF4444;text-shadow:0 0 6px rgba(239,68,68,.4)}
-body.bn .sv.ok{color:#009933}
-body.bn .sv.mid{color:#CC8800}
-body.bn .sv.err{color:#CC3333}
+body.bn .sv.ok{color:#009933;text-shadow:0 0 6px rgba(0,153,51,.3)}
+body.bn .sv.mid{color:#CC8800;text-shadow:0 0 6px rgba(204,136,0,.3)}
+body.bn .sv.err{color:#CC3333;text-shadow:0 0 6px rgba(204,51,51,.3)}
 
 /* ── LOG ───────────────────────────────────────────────── */
 .log{font-family:var(--mono);font-size:.61rem;line-height:1.8;
@@ -316,7 +316,7 @@ body.bn .toast{background:var(--ink);color:var(--wh)}
 
 /* EM labels */
 .emlbl{display:flex;justify-content:space-between;font-family:var(--mono);
-  font-size:.53rem;color:var(--ink3);margin-top:3px;padding:0 2px}
+  font-size:.53rem;color:rgb(139, 139, 139);margin-top:3px;padding:0 2px}
 /* spinner btn */
 .bspn{width:16px;height:16px;border:2px solid var(--bdr);
   border-top-color:var(--c1);border-radius:50%;
@@ -330,9 +330,9 @@ body.bn .bspn{border-top-color:var(--ink)}
 .light.green{background:#10B981;box-shadow:0 0 6px rgba(16,185,129,.6)}
 .light.yellow{background:#F59E0B;box-shadow:0 0 6px rgba(245,158,11,.6)}
 .light.red{background:#EF4444;box-shadow:0 0 6px rgba(239,68,68,.6)}
-body.bn .light.green{background:#009933}
-body.bn .light.yellow{background:#CC8800}
-body.bn .light.red{background:#CC3333}
+body.bn .light.green{background:#009933;box-shadow:0 0 6px rgba(0,153,51,.6)}
+body.bn .light.yellow{background:#CC8800;box-shadow:0 0 6px rgba(204,136,0,.6)}
+body.bn .light.red{background:#CC3333;box-shadow:0 0 6px rgba(204,51,51,.6)}
 
 /* ── TOOLTIPS ───────────────────────────────────────── */
 .tooltip{position:relative;cursor:help;border-bottom:1px dotted var(--ink3)}
@@ -385,12 +385,18 @@ body.bn .stat[title]::after{background:var(--bg2);color:var(--ink)}
   background:var(--bg2);border-radius:var(--r);border:1px solid var(--bdr)}
 .qi-light{width:10px;height:10px;border-radius:50%;
   box-shadow:inset 0 1px 2px rgba(0,0,0,.2);transition:all .3s}
-.qi-light.ok{background:linear-gradient(135deg,#10B981,#059669);
+.qi-light.ok{background:#10B981;
   box-shadow:0 0 8px rgba(16,185,129,.8),inset 0 1px 2px rgba(0,0,0,.2)}
-.qi-light.warn{background:linear-gradient(135deg,#F59E0B,#D97706);
+.qi-light.warn{background:#F59E0B;
   box-shadow:0 0 8px rgba(245,158,11,.8),inset 0 1px 2px rgba(0,0,0,.2)}
-.qi-light.err{background:linear-gradient(135deg,#EF4444,#DC2626);
+.qi-light.err{background:#EF4444;
   box-shadow:0 0 8px rgba(239,68,68,.8),inset 0 1px 2px rgba(0,0,0,.2)}
+body.bn .qi-light.ok{background:#009933;
+  box-shadow:0 0 8px rgba(0,153,51,.8),inset 0 1px 2px rgba(0,0,0,.2)}
+body.bn .qi-light.warn{background:#CC8800;
+  box-shadow:0 0 8px rgba(204,136,0,.8),inset 0 1px 2px rgba(0,0,0,.2)}
+body.bn .qi-light.err{background:#CC3333;
+  box-shadow:0 0 8px rgba(204,51,51,.8),inset 0 1px 2px rgba(0,0,0,.2)}
 
 /* ── PANELES DE INFORMACIÓN ─────────────────────────── */
 .info-panel{background:var(--bg2);border:1px solid var(--bdr);
@@ -782,6 +788,25 @@ body.bn .graph-info-value{color:var(--ink)}
 <script type="module">
   // Import main application module
   import './static/js/modules/app.js';
+</script>
+
+<!-- ═══════════════════════════════════════════════════════
+     THEME BUTTON HANDLER (Separate to debug)
+     ═══════════════════════════════════════════════════════ -->
+<script>
+  // Wait for DOM to be ready and app to load
+  setTimeout(() => {
+    const btnTema = document.getElementById('btnTema');
+    if (btnTema) {
+      btnTema.addEventListener('click', function(e) {
+        e.stopImmediatePropagation();
+        console.log('[TEMA CLICK] Event fired');
+        document.body.classList.toggle('bn');
+        console.log('[TEMA CLICK] Classes now:', document.body.classList.toString());
+      });
+      console.log('[SCRIPT] Theme button listener attached');
+    }
+  }, 500);
 </script>
 </body>
 </html>

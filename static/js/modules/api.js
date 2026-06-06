@@ -23,6 +23,10 @@ export async function loadOpts() {
   const sm = $('selMod');
   const sc = $('selCod');
 
+  // Clear existing options to prevent duplicates
+  sm.innerHTML = '';
+  sc.innerHTML = '';
+
   d.mods.forEach((m) => {
     sm.add(new Option(m, m));
   });

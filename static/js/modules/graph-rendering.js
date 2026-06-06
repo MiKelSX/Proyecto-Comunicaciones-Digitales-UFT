@@ -50,7 +50,7 @@ export function drawNRZ(ctx, bits, c) {
 
   // Labels
   ctx.fillStyle = c.ink3;
-  ctx.font = 8 * DPR + 'px Space Mono';
+  ctx.font = 12 * DPR + 'px Space Mono';
   ctx.save();
   ctx.scale(1 / DPR, 1 / DPR);
   ctx.fillText('1', 4 * DPR, ctx.H * 0.2 * DPR);
@@ -59,7 +59,7 @@ export function drawNRZ(ctx, bits, c) {
   const ones = bits.slice(0, n).filter((b) => b).length;
   const zeros = n - ones;
   ctx.fillStyle = c.c1;
-  ctx.font = 'bold ' + 9 * DPR + 'px Space Mono';
+  ctx.font = 'bold ' + 14 * DPR + 'px Space Mono';
   ctx.textAlign = 'right';
   ctx.fillText(`${n} bits | 1s:${ones} 0s:${zeros}`, (ctx.W - 4) * DPR, (ctx.H - 6) * DPR);
   ctx.textAlign = 'left';
@@ -81,7 +81,7 @@ export function drawConstIdeal(id, mod, c) {
   // Reference circles
   [0.28, 0.56, 0.84].forEach((r) => {
     ctx.strokeStyle = c.bdr;
-    ctx.lineWidth = 0.7;
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
     ctx.arc(cx, cy, Math.min(W, H) * r * 0.47, 0, 2 * Math.PI);
     ctx.stroke();
@@ -89,7 +89,7 @@ export function drawConstIdeal(id, mod, c) {
 
   // Axes
   ctx.strokeStyle = c.ink3;
-  ctx.lineWidth = 0.8;
+  ctx.lineWidth = 3;
   ctx.beginPath();
   ctx.moveTo(0, cy);
   ctx.lineTo(W, cy);
@@ -101,7 +101,7 @@ export function drawConstIdeal(id, mod, c) {
 
   // Labels
   ctx.fillStyle = c.ink3;
-  ctx.font = 8 * DPR + 'px Space Mono';
+  ctx.font = 12 * DPR + 'px Space Mono';
   ctx.save();
   ctx.scale(1 / DPR, 1 / DPR);
   ctx.fillText('I', (W - 11) * DPR, (cy + 12) * DPR);
@@ -124,7 +124,7 @@ export function drawConstIdeal(id, mod, c) {
     ctx.fill();
 
     ctx.strokeStyle = c.c4;
-    ctx.lineWidth = 1.2;
+    ctx.lineWidth = 3.5;
     ctx.beginPath();
     ctx.arc(cx + x * sc, cy - y * sc, 7, 0, 2 * Math.PI);
     ctx.stroke();
@@ -202,7 +202,7 @@ export function drawEyeAnim(id, c) {
   grid(ctx, 4, 4, c);
 
   const t = performance.now() / 1000;
-  ctx.lineWidth = 0.9;
+  ctx.lineWidth = 3.2;
 
   for (let i = 0; i < 35; i++) {
     const ph = ((i * 0.23 + t * 0.12) % 0.6) - 0.3;
@@ -221,7 +221,7 @@ export function drawEyeAnim(id, c) {
 
   ctx.globalAlpha = 1;
   ctx.strokeStyle = c.c3;
-  ctx.lineWidth = 1;
+  ctx.lineWidth = 3.5;
   ctx.setLineDash([3, 3]);
   ctx.beginPath();
   ctx.moveTo(ctx.W / 2, 0);
@@ -245,7 +245,7 @@ export function drawEyeData(id, rows, c) {
 
   fill(ctx, c.bg);
   grid(ctx, 4, 4, c);
-  ctx.lineWidth = 0.9;
+  ctx.lineWidth = 3.2;
 
   rows.forEach((row) => {
     const mn = Math.min(...row);
@@ -267,7 +267,7 @@ export function drawEyeData(id, rows, c) {
 
   ctx.globalAlpha = 1;
   ctx.strokeStyle = c.c3;
-  ctx.lineWidth = 1;
+  ctx.lineWidth = 3.5;
   ctx.setLineDash([3, 3]);
   ctx.beginPath();
   ctx.moveTo(ctx.W / 2, 0);
@@ -287,13 +287,13 @@ export function drawEM(id, fc) {
   // EM spectrum bands
   const bandas = A.bn
     ? [
-        ['#EBEBEB', '#D0D0D0'],
-        ['#B8B8B8', '#A0A0A0'],
-        ['#888888', '#707070'],
-        ['#585858', '#404040'],
-        ['#2C2C2C', '#1C1C1C'],
-        ['#141414', '#0A0A0A'],
-        ['#060606', '#000000'],
+        ['#FF0050', '#FF4500'],
+        ['#FF8C00', '#FFB300'],
+        ['#FFE600', '#AAEE00'],
+        ['#00D4FF', '#0066FF'],
+        ['#8800FF', '#CC00EE'],
+        ['#FF00AA', '#FF0066'],
+        ['#E8E8FF', '#C0C0FF'],
       ]
     : [
         ['#FF0050', '#FF4500'],
@@ -320,14 +320,14 @@ export function drawEM(id, fc) {
 
   ctx.save();
   ctx.fillStyle = '#fff';
-  ctx.font = 'bold ' + 9 * DPR + 'px Space Mono';
+  ctx.font = 'bold ' + 14 * DPR + 'px Space Mono';
   ctx.scale(1 / DPR, 1 / DPR);
   ctx.fillText('fc: ' + Math.round(fc || 400) + 'Hz', (pos + 5) * DPR, 12 * DPR);
 
   // Band labels
   const bands = ['RF', 'MW', 'HF', 'VHF', 'UHF', 'SHF', 'EHF'];
   bands.forEach((b, i) => {
-    ctx.font = 7 * DPR + 'px Space Mono';
+    ctx.font = 11 * DPR + 'px Space Mono';
     ctx.fillText(b, ((i * W) / 7 + W / 14) * DPR, (H - 4) * DPR);
   });
 
@@ -475,7 +475,7 @@ export function drawBERH(c) {
   // 1% threshold
   const yu = ctx.H - (0.01 / mx) * ctx.H * 0.84 - ctx.H * 0.08;
   ctx.strokeStyle = c.c5 + '66';
-  ctx.lineWidth = 1;
+  ctx.lineWidth = 3.5;
   ctx.setLineDash([3, 3]);
   ctx.beginPath();
   ctx.moveTo(0, yu);
@@ -484,7 +484,7 @@ export function drawBERH(c) {
   ctx.setLineDash([]);
 
   ctx.fillStyle = c.ink3;
-  ctx.font = 7 * DPR + 'px Space Mono';
+  ctx.font = 11 * DPR + 'px Space Mono';
   ctx.save();
   ctx.scale(1 / DPR, 1 / DPR);
   ctx.fillText('BER=1%', 4 * DPR, (yu - 3) * DPR);
@@ -504,7 +504,7 @@ export function drawBERH(c) {
   ctx.fill();
 
   ctx.strokeStyle = c.c1;
-  ctx.lineWidth = 1.6;
+  ctx.lineWidth = 4;
   ctx.beginPath();
   pts.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
   ctx.stroke();
@@ -517,7 +517,7 @@ export function drawBERH(c) {
   });
 
   ctx.fillStyle = c.ink2;
-  ctx.font = 8 * DPR + 'px Space Mono';
+  ctx.font = 12 * DPR + 'px Space Mono';
   ctx.save();
   ctx.scale(1 / DPR, 1 / DPR);
   ctx.fillText('BER: ' + (d[d.length - 1] * 100).toFixed(3) + '%', 6 * DPR, 14 * DPR);
@@ -566,7 +566,7 @@ export async function drawBERCurva() {
 
   // Theoretical line
   ctx.strokeStyle = c.ink3;
-  ctx.lineWidth = 1;
+  ctx.lineWidth = 3.5;
   ctx.setLineDash([4, 3]);
   ctx.beginPath();
   teo.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
@@ -587,7 +587,7 @@ export async function drawBERCurva() {
   ctx.fill();
 
   ctx.strokeStyle = c.c1;
-  ctx.lineWidth = 2.2;
+  ctx.lineWidth = 4;
   ctx.beginPath();
   pts.forEach((p, i) => (i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)));
   ctx.stroke();
@@ -603,7 +603,7 @@ export async function drawBERCurva() {
   });
 
   ctx.fillStyle = c.ink2;
-  ctx.font = 8 * DPR + 'px Space Mono';
+  ctx.font = 12 * DPR + 'px Space Mono';
   ctx.save();
   ctx.scale(1 / DPR, 1 / DPR);
   ctx.fillText('─ Medido   - - Teórico BPSK', 8 * DPR, 14 * DPR);

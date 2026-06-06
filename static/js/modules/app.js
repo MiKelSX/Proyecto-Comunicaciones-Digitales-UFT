@@ -150,10 +150,15 @@ export async function init() {
   }
 }
 
-// Single entry point with error handling
-window.addEventListener('DOMContentLoaded', init);
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
-} else {
-  init();
+// Single entry point with error handling - executed only once
+let initExecuted = false;
+const executeInit = async () => {
+  if (initExecuted) return;  // Prevent double execution
+  initExecuted = true;
+  await init();
+};
+
+window.addEventListener('DOMContentLoaded', executeInit);
+if (document.readyState !== 'loading') {
+  executeInit();
 }

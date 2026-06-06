@@ -11,6 +11,8 @@ import {
   drawNRZ,
   drawConstData,
   drawEyeData,
+  drawEyeAnim,
+  drawConstIdeal,
   drawBERCurva,
 } from './graph-rendering.js';
 import { iniciarGrab, detenerGrab } from './audio-handler.js';
@@ -505,13 +507,37 @@ export function conectar() {
 
   $('btnBER').addEventListener('click', drawBERCurva);
 
-  $('btnTema').addEventListener('click', () => {
+  $('btnTema').addEventListener('click', function(e) {
+    // Toggle dark mode flag
     A.bn = !A.bn;
-    document.body.classList.toggle('bn', A.bn);
+    
+    // Toggle the class on the body element
+    document.body.classList.toggle('bn');
+    
+    // Update localStorage
     localStorage.setItem('commsim-theme', A.bn ? 'light' : 'dark');
+    
+    // Update button text and title
     $('btnTema').textContent = A.bn ? '🌙 Tema' : '🌞 Tema';
     $('btnTema').title = A.bn ? 'Tema claro (Light Mode)' : 'Tema oscuro (Dark Mode)';
-    if (A.lastR) setTimeout(() => renderR(A.lastR), 50);
+    
+    // Show toast
+    toast(A.bn ? '🌙 Modo Claro' : '☀ Modo Oscuro');
+    
+    // Invalidate canvas cache
+    document.querySelectorAll('canvas').forEach(el => {
+      el._cW = null;
+      el._cH = null;
+    });
+    
+    // Re-render visualizations
+    setTimeout(() => {
+      try {
+        if (A.lastR) renderR(A.lastR);
+      } catch (e) {
+        console.warn('[THEME]', e);
+      }
+    }, 100);
   });
 
   $('btnGrb').addEventListener('click', iniciarGrab);
